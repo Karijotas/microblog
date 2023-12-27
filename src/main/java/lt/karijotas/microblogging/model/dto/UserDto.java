@@ -1,13 +1,16 @@
 package lt.karijotas.microblogging.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lt.karijotas.microblogging.model.Post;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 public class UserDto {
     private String name;
     private String password;
+    private List<Post> postList;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
@@ -21,9 +24,10 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String name, String password, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
+    public UserDto(String name, String password, List<Post> postList, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
         this.name = name;
         this.password = password;
+        this.postList = postList;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.createdBy = createdBy;
@@ -44,6 +48,14 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Post> getPostList() {
+        return postList;
+    }
+
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
     }
 
     public LocalDateTime getCreatedDate() {

@@ -1,12 +1,11 @@
 package lt.karijotas.microblogging.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +17,11 @@ public class Post {
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String name;
     private String body;
+    @ManyToOne
+    @NotNull
+    private User user;
+    @OneToMany
+    private List<Comment> commentList;
 
     public Post() {
     }
@@ -66,5 +70,13 @@ public class Post {
                 ", name='" + name + '\'' +
                 ", body='" + body + '\'' +
                 '}';
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 }

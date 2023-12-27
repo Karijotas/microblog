@@ -1,11 +1,9 @@
 package lt.karijotas.microblogging.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -18,6 +16,12 @@ public class Comment {
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String username;
     private String comment;
+    @ManyToOne
+    @NotNull
+    private Post post;
+    @ManyToOne
+    @NotNull
+    private User user;
 
     public Comment() {
     }
