@@ -7,6 +7,7 @@ import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -68,16 +69,20 @@ public class PostService extends GenericService {
 
     @Override
     public List<Post> getAll() {
-        return super.getAll();
+        return postRepository.findAll();
     }
 
     @Override
     public Boolean deleteById(Long id) {
-        return super.deleteById(id);
+         try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
     }
-
     @Override
     public Optional<Post> getById(Long id) {
-        return super.getById(id);
+        return postRepository.findById(id);
     }
 }

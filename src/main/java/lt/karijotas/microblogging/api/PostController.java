@@ -20,7 +20,7 @@ import static lt.karijotas.microblogging.model.mapper.PostMapper.*;
 import static org.springframework.http.ResponseEntity.ok;
 
 @Controller
-@RequestMapping("/api/v1/post")
+@RequestMapping("/post")
 public class PostController {
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
@@ -29,7 +29,7 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping( produces = {MediaType.APPLICATION_JSON_VALUE,})
     @ResponseBody
     public List<Post> getAll() {
         return postService.getAll();
@@ -45,7 +45,7 @@ public class PostController {
 
         return responseEntity;
     }
-
+    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<PostEntityDto> create(@Valid @RequestBody PostEntityDto postEntityDto) {
         var createdPost = postService.create(toPost(postEntityDto));
         return ok(toPostEntityDto(createdPost));
