@@ -10,7 +10,7 @@ public class UserEntityDto extends UserDto {
     }
 
     public UserEntityDto(Long id, String name, String password, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
-        super(name, password, createdDate, modifiedDate, createdBy, modifiedBy);
+        super();
         this.id = id;
     }
 

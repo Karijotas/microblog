@@ -7,16 +7,16 @@ public class UserMapper {
 
     public static UserEntityDto toUserEntityDto(User user) {
         var userEntityDto = new UserEntityDto();
-        userEntityDto.setId(userEntityDto.getId());
-        userEntityDto.setName(userEntityDto.getName());
-        userEntityDto.setPassword(userEntityDto.getPassword());
+        userEntityDto.setId(user.getId());
+        userEntityDto.setName(user.getUserName());
+        userEntityDto.setPassword(user.getPassword());
         return userEntityDto;
     }
 
     public static User toUser(UserEntityDto entityDto){
         var user = new User();
         user.setId(entityDto.getId());
-        user.setName(entityDto.getName());
+        user.setUserName(entityDto.getName());
         user.setPassword(entityDto.getPassword());
         user.setPostList(entityDto.getPostList());
         return user;

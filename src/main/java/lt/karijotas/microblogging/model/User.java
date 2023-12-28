@@ -15,7 +15,7 @@ public class User {
     private Long id;
     @NotBlank
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
-    private String name;
+    private String userName;
     private String password;
     @OneToMany
     private List<Post> postList;
@@ -23,9 +23,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String password) {
+    public User(Long id, String userName, String password) {
         this.id = id;
-        this.name = name;
+        this.userName = userName;
         this.password = password;
     }
 
@@ -37,12 +37,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String name) {
+        this.userName = name;
     }
 
     public String getPassword() {
@@ -58,19 +58,19 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getName(), user.getName()) && Objects.equals(getPassword(), user.getPassword());
+        return Objects.equals(getId(), user.getId()) && Objects.equals(getUserName(), user.getUserName()) && Objects.equals(getPassword(), user.getPassword());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getPassword());
+        return Objects.hash(getId(), getUserName(), getPassword());
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + userName + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

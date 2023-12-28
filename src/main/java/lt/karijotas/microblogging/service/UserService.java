@@ -24,10 +24,12 @@ public class UserService extends GenericService{
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
     }
+
+
     public User create(User user) {
         var newUser = new User();
         newUser.setId(user.getId());
-        newUser.setName(user.getName());
+        newUser.setUserName(user.getUserName());
         newUser.setPassword(user.getPassword());
         return userRepository.save(newUser);
     }
@@ -35,7 +37,7 @@ public class UserService extends GenericService{
     public User update(User user, Long id) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new BlogValidationExeption("User doesn't exist", "id", "User doesn't exist", id.toString()));
-        existingUser.setName(user.getName());
+        existingUser.setUserName(user.getUserName());
         existingUser.setPassword(user.getPassword());
         return userRepository.save(existingUser);
     }

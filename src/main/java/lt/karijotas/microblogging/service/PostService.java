@@ -9,8 +9,8 @@ import lt.karijotas.microblogging.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService extends GenericService {
@@ -35,16 +35,39 @@ public class PostService extends GenericService {
     }
 
     public Post update(Post post, Long id) {
-        Post existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
+        Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
         existingPost.setName(post.getName());
         existingPost.setBody(post.getBody());
         existingPost.setCommentList(post.getCommentList());
         return postRepository.save(existingPost);
     }
 
+    public String[] splitPost(Post post) {
+        String text = post.getBody();
+        return text.split("\\s+");
+    }
+
+    public Integer wordCount(Post post) {
+        return splitPost(post).length;
+    }
+
+    public Map<String, Integer> mostUsedWords(Post post, Long limit) {
+        String[] words = splitPost(post);
+        Map<String, Integer> wordCount = Arrays.stream(words)
+                .collect(Collectors.groupingBy(
+                        word -> word,
+                        Collectors.summingInt(word -> 1)
+                ));
+        return wordCount.entrySet()
+                .stream()
+                .limit(limit)
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+    }
+
     @Override
-    public List getAll() {
+    public List<Post> getAll() {
         return super.getAll();
     }
 
@@ -54,7 +77,7 @@ public class PostService extends GenericService {
     }
 
     @Override
-    public Optional getById(Long id) {
+    public Optional<Post> getById(Long id) {
         return super.getById(id);
     }
 }

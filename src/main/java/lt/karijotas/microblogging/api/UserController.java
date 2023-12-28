@@ -26,26 +26,22 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
     @ResponseBody
-    public List<User> getGroups() {
+    public List<User> getAll() {
         return userService.getAll();
     }
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE,})
     public ResponseEntity<UserEntityDto> getUser(@PathVariable Long userId) {
         var userOptional = userService.getById(userId);
 
-        var responseEntity = userOptional
-                .map(groups -> ok(toUserEntityDto(groups)))
+        return userOptional
+                .map(user -> ok(toUserEntityDto(user)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
-
-        return responseEntity;
     }
-
-    public ResponseEntity<UserEntityDto> create(@Valid @RequestBody UserEntityDto userEntityDto) {
+    @PostMapping("/api/v1/user/register")
+    public ResponseEntity<UserEntityDto> register(@Valid @RequestBody UserEntityDto userEntityDto) {
                 var createdUser = userService.create(toUser(userEntityDto));
                 return ok(toUserEntityDto(createdUser));
     }
-
 }

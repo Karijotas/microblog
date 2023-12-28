@@ -6,11 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class MicrobloggingApplication extends SpringBootServletInitializer {
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(MicrobloggingApplication.class);
-    }
+public class MicrobloggingApplication{
 
     public static void main(String[] args) {
         SpringApplication.run(MicrobloggingApplication.class, args);

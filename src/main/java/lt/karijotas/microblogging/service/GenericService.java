@@ -11,7 +11,7 @@ public abstract class GenericService {
     }
 
     public Optional getById(Long id) {
-        return null;
+        return Optional.empty();
     }
 
     public Boolean deleteById(Long id) {
