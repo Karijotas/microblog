@@ -29,7 +29,7 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping( produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
     @ResponseBody
     public List<Post> getAll() {
         return postService.getAll();
@@ -45,7 +45,8 @@ public class PostController {
 
         return responseEntity;
     }
-    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+
+    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostEntityDto> create(@Valid @RequestBody PostEntityDto postEntityDto) {
         var createdPost = postService.create(toPost(postEntityDto));
         return ok(toPostEntityDto(createdPost));
@@ -68,18 +69,21 @@ public class PostController {
         return ok(toPostDto(updated));
     }
 
-    @GetMapping(value = "/{postId}/wordcount", produces = {MediaType.APPLICATION_JSON_VALUE,})
-    public Integer getPostWordCount(@PathVariable Long postId) {
+    @GetMapping(value = "/{postId}/wordcount", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> getPostWordCount(@PathVariable Long postId) {
         Post post = postService.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
-        return postService.wordCount(post);
+        Integer wordCount = postService.wordCount(post);
+        return ResponseEntity.ok().body(wordCount);
     }
 
+
     @GetMapping(value = "/{postId}/wordcount/{limit}", produces = {MediaType.APPLICATION_JSON_VALUE,})
-    public Map<String, Integer> mostUsedWords(@PathVariable Long postId, @PathVariable Long limit) {
+    public ResponseEntity<Map<String, Long>> mostUsedWords(@PathVariable Long postId, @PathVariable Long limit) {
         Post post = postService.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
-        return postService.mostUsedWords(post, limit);
+        Map<String, Long> mostUsedWords = postService.mostUsedWords(post, limit);
+        return ResponseEntity.ok().body(mostUsedWords);
     }
 
 }

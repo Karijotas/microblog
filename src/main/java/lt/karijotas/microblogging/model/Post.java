@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,11 +16,12 @@ public class Post {
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String name;
     private String body;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "blogger_id", referencedColumnName = "blogger_id", nullable = false)
     @NotNull
-    private User user;
-    @OneToMany
-    private List<Comment> commentList;
+    private Blogger blogger;
+//    @OneToMany
+//    private List<Comment> commentList;
 
     public Post() {
     }
@@ -50,33 +50,35 @@ public class Post {
         this.body = body;
     }
 
+    public Blogger getBlogger() {
+        return blogger;
+    }
+
+    public void setBlogger(Blogger blogger) {
+        this.blogger = blogger;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return Objects.equals(getId(), post.getId()) && Objects.equals(getName(), post.getName()) && Objects.equals(getBody(), post.getBody());
+        return Objects.equals(getId(), post.getId()) && Objects.equals(getName(), post.getName()) && Objects.equals(getBody(), post.getBody()) && Objects.equals(getBlogger(), post.getBlogger());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getBody());
+        return Objects.hash(getId(), getName(), getBody(), getBlogger());
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "Post{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", body='" + body + '\'' +
+                ", blogger=" + blogger +
                 '}';
-    }
-
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
     }
 }

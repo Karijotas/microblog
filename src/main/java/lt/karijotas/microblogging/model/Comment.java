@@ -16,12 +16,12 @@ public class Comment {
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String username;
     private String comment;
-    @ManyToOne
-    @NotNull
-    private Post post;
-    @ManyToOne
-    @NotNull
-    private User user;
+//    @ManyToOne
+//    @NotNull
+//    private Post post;
+//    @ManyToOne
+//    @NotNull
+//    private User user;
 
     public Comment() {
     }

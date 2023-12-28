@@ -3,13 +3,13 @@ package lt.karijotas.microblogging.model.dto;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class UserEntityDto extends UserDto {
+public class BloggerEntityDto extends BloggerDto {
     private Long id;
 
-    public UserEntityDto() {
+    public BloggerEntityDto() {
     }
 
-    public UserEntityDto(Long id, String name, String password, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
+    public BloggerEntityDto(Long id, String name, String password, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
         super();
         this.id = id;
     }
@@ -87,7 +87,7 @@ public class UserEntityDto extends UserDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        UserEntityDto that = (UserEntityDto) o;
+        BloggerEntityDto that = (BloggerEntityDto) o;
         return Objects.equals(getId(), that.getId());
     }
 
@@ -98,7 +98,7 @@ public class UserEntityDto extends UserDto {
 
     @Override
     public String toString() {
-        return "UserEntityDto{" +
+        return "BloggerEntityDto{" +
                 "id=" + id +
                 '}';
     }

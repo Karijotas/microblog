@@ -9,21 +9,22 @@ import java.util.Objects;
 
 
 @Entity
-public class User {
+@Table(name = "blogger")
+public class Blogger {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "blogger_id")
     private Long id;
     @NotBlank
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String userName;
     private String password;
-    @OneToMany
-    private List<Post> postList;
-
-    public User() {
+    @OneToMany(mappedBy = "blogger")
+    private List<Post> posts;
+    public Blogger() {
     }
 
-    public User(Long id, String userName, String password) {
+    public Blogger(Long id, String userName, String password) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -57,8 +58,8 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(getId(), user.getId()) && Objects.equals(getUserName(), user.getUserName()) && Objects.equals(getPassword(), user.getPassword());
+        Blogger blogger = (Blogger) o;
+        return Objects.equals(getId(), blogger.getId()) && Objects.equals(getUserName(), blogger.getUserName()) && Objects.equals(getPassword(), blogger.getPassword());
     }
 
     @Override
@@ -75,11 +76,11 @@ public class User {
                 '}';
     }
 
-    public List<Post> getPostList() {
-        return postList;
-    }
-
-    public void setPostList(List<Post> postList) {
-        this.postList = postList;
-    }
+//    public List<Post> getPostList() {
+//        return postList;
+//    }
+//
+//    public void setPostList(List<Post> postList) {
+//        this.postList = postList;
+//    }
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class UserDto {
+public class BloggerDto {
     private String name;
     private String password;
     private List<Post> postList;
@@ -21,10 +21,10 @@ public class UserDto {
 
     private String modifiedBy;
 
-    public UserDto() {
+    public BloggerDto() {
     }
 
-    public UserDto(String name, String password, List<Post> postList, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
+    public BloggerDto(String name, String password, List<Post> postList, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
         this.name = name;
         this.password = password;
         this.postList = postList;
@@ -94,8 +94,8 @@ public class UserDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDto userDto = (UserDto) o;
-        return Objects.equals(getName(), userDto.getName()) && Objects.equals(getPassword(), userDto.getPassword()) && Objects.equals(getCreatedDate(), userDto.getCreatedDate()) && Objects.equals(getModifiedDate(), userDto.getModifiedDate()) && Objects.equals(getCreatedBy(), userDto.getCreatedBy()) && Objects.equals(getModifiedBy(), userDto.getModifiedBy());
+        BloggerDto bloggerDto = (BloggerDto) o;
+        return Objects.equals(getName(), bloggerDto.getName()) && Objects.equals(getPassword(), bloggerDto.getPassword()) && Objects.equals(getCreatedDate(), bloggerDto.getCreatedDate()) && Objects.equals(getModifiedDate(), bloggerDto.getModifiedDate()) && Objects.equals(getCreatedBy(), bloggerDto.getCreatedBy()) && Objects.equals(getModifiedBy(), bloggerDto.getModifiedBy());
     }
 
     @Override
@@ -105,7 +105,7 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "BloggerDto{" +
                 "name='" + name + '\'' +
                 ", password='" + password + '\'' +
                 ", createdDate=" + createdDate +

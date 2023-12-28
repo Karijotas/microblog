@@ -2,10 +2,9 @@ package lt.karijotas.microblogging.service;
 
 import lt.karijotas.microblogging.dao.CommentRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
-import lt.karijotas.microblogging.dao.UserRepository;
+import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Comment;
-import lt.karijotas.microblogging.model.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +13,13 @@ import java.util.Optional;
 
 @Service
 public class CommentService extends GenericService {
-    private final UserRepository userRepository;
+    private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
 
     @Autowired
-    public CommentService(UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository) {
-        this.userRepository = userRepository;
+    public CommentService(BloggerRepository bloggerRepository, PostRepository postRepository, CommentRepository commentRepository) {
+        this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
     }

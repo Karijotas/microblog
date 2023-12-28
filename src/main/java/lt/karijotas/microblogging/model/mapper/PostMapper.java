@@ -11,6 +11,7 @@ public class PostMapper {
         postEntityDto.setId(postEntityDto.getId());
         postEntityDto.setName(postEntityDto.getName());
         postEntityDto.setBody(postEntityDto.getBody());
+        postEntityDto.setBloggerId(post.getBlogger().getId());
         return postEntityDto;
     }
 

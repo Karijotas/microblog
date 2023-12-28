@@ -8,6 +8,7 @@ import java.util.Objects;
 public class PostDto {
     private String name;
     private String body;
+    private Long bloggerId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
@@ -21,9 +22,10 @@ public class PostDto {
     public PostDto() {
     }
 
-    public PostDto(String name, String body, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
+    public PostDto(String name, String body, Long bloggerId, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
         this.name = name;
         this.body = body;
+        this.bloggerId = bloggerId;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
         this.createdBy = createdBy;
@@ -44,6 +46,14 @@ public class PostDto {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public Long getBloggerId() {
+        return bloggerId;
+    }
+
+    public void setBloggerId(Long bloggerId) {
+        this.bloggerId = bloggerId;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -83,12 +93,12 @@ public class PostDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostDto postDto = (PostDto) o;
-        return Objects.equals(getName(), postDto.getName()) && Objects.equals(getBody(), postDto.getBody()) && Objects.equals(getCreatedDate(), postDto.getCreatedDate()) && Objects.equals(getModifiedDate(), postDto.getModifiedDate()) && Objects.equals(getCreatedBy(), postDto.getCreatedBy()) && Objects.equals(getModifiedBy(), postDto.getModifiedBy());
+        return Objects.equals(getName(), postDto.getName()) && Objects.equals(getBody(), postDto.getBody()) && Objects.equals(getBloggerId(), postDto.getBloggerId()) && Objects.equals(getCreatedDate(), postDto.getCreatedDate()) && Objects.equals(getModifiedDate(), postDto.getModifiedDate()) && Objects.equals(getCreatedBy(), postDto.getCreatedBy()) && Objects.equals(getModifiedBy(), postDto.getModifiedBy());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getBody(), getCreatedDate(), getModifiedDate(), getCreatedBy(), getModifiedBy());
+        return Objects.hash(getName(), getBody(), getBloggerId(), getCreatedDate(), getModifiedDate(), getCreatedBy(), getModifiedBy());
     }
 
     @Override
@@ -96,6 +106,7 @@ public class PostDto {
         return "PostDto{" +
                 "name='" + name + '\'' +
                 ", body='" + body + '\'' +
+                ", bloggerId=" + bloggerId +
                 ", createdDate=" + createdDate +
                 ", modifiedDate=" + modifiedDate +
                 ", createdBy='" + createdBy + '\'' +

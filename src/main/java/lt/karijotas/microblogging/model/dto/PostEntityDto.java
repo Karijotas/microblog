@@ -7,10 +7,11 @@ public class PostEntityDto extends PostDto {
     private Long id;
 
     public PostEntityDto() {
+        super();
     }
 
-    public PostEntityDto(Long id, String name, String body, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
-        super(name, body, createdDate, modifiedDate, createdBy, modifiedBy);
+    public PostEntityDto(String name, String body, Long bloggerId, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy, Long id) {
+        super(name, body, bloggerId, createdDate, modifiedDate, createdBy, modifiedBy);
         this.id = id;
     }
 
