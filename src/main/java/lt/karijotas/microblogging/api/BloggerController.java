@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,11 +30,13 @@ public class BloggerController {
     public BloggerController(BloggerService bloggerService) {
         this.bloggerService = bloggerService;
     }
+
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
     @ResponseBody
     public List<Blogger> getAll() {
         return bloggerService.getAll();
     }
+
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE,})
     public ResponseEntity<BloggerEntityDto> getUser(@PathVariable Long userId) {
         var userOptional = bloggerService.getById(userId);
@@ -39,9 +45,26 @@ public class BloggerController {
                 .map(user -> ok(toUserEntityDto(user)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @PostMapping("/api/v1/user/register")
-    public ResponseEntity<BloggerEntityDto> register(@Valid @RequestBody BloggerEntityDto bloggerEntityDto) {
-                var createdUser = bloggerService.create(toUser(bloggerEntityDto));
-                return ok(toUserEntityDto(createdUser));
+
+    @PostMapping("/register")
+    public ResponseEntity<Blogger> register(@Valid @RequestBody Blogger blogger) {
+        var createdUser = bloggerService.create(blogger);
+        return ok(createdUser);
+    }
+
+    @GetMapping("/current-user")
+    public ResponseEntity<String> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            String username = userDetails.getUsername();
+            return ResponseEntity.ok(username);
+        } else {
+            return ResponseEntity.ok("No authenticated user found.");
+        }
+    }
+    @GetMapping("/current-user/id")
+    public ResponseEntity<Long> getCurrentUserId(@AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Long id = bloggerService.findByUserName(username).getId();
+        return ResponseEntity.ok(id);
     }
 }

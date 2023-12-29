@@ -12,7 +12,7 @@ import java.util.Objects;
 @Table(name = "blogger")
 public class Blogger {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "blogger_id")
     private Long id;
     @NotBlank

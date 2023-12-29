@@ -1,8 +1,7 @@
 package lt.karijotas.microblogging.service;
 
-import lt.karijotas.microblogging.dao.CommentRepository;
-import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.dao.BloggerRepository;
+import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +15,16 @@ import java.util.Optional;
 public class BloggerService extends GenericService{
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
 
     @Autowired
-    public BloggerService(BloggerRepository bloggerRepository, PostRepository postRepository, CommentRepository commentRepository) {
+    public BloggerService(BloggerRepository bloggerRepository, PostRepository postRepository) {
         this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
     }
 
 
     public Blogger create(Blogger blogger) {
-        var newUser = new Blogger();
-        newUser.setId(blogger.getId());
-        newUser.setUserName(blogger.getUserName());
-        newUser.setPassword(blogger.getPassword());
-        return bloggerRepository.save(newUser);
+        return bloggerRepository.save(blogger);
     }
 
     public Blogger update(Blogger blogger, Long id) {
@@ -41,6 +34,11 @@ public class BloggerService extends GenericService{
         existingBlogger.setPassword(blogger.getPassword());
         return bloggerRepository.save(existingBlogger);
     }
+
+ public Blogger findByUserName(String username){
+     return   bloggerRepository.findByUserName(username);
+ };
+
     @Override
     public List<Blogger> getAll() {
         return bloggerRepository.findAll();

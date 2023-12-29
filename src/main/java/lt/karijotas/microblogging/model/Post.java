@@ -20,8 +20,6 @@ public class Post {
     @JoinColumn(name = "blogger_id", referencedColumnName = "blogger_id", nullable = false)
     @NotNull
     private Blogger blogger;
-//    @OneToMany
-//    private List<Comment> commentList;
 
     public Post() {
     }

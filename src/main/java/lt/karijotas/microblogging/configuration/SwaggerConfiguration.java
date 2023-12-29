@@ -15,7 +15,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("lt.karijotas.microblogging.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

@@ -1,15 +1,14 @@
 package lt.karijotas.microblogging.service;
 
-import lt.karijotas.microblogging.dao.CommentRepository;
-import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.dao.BloggerRepository;
+import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
+import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Post;
-import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import lt.karijotas.microblogging.model.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,21 +18,21 @@ import java.util.stream.Collectors;
 public class PostService extends GenericService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
 
     @Autowired
-    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository, CommentRepository commentRepository) {
+    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
         this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
     }
 
-    public Post create(Post post) {
+    public Post create(PostEntityDto post) {
+        Blogger blogger = bloggerRepository.getById(post.getBloggerId());
+
         var newPost = new Post();
         newPost.setId(post.getId());
         newPost.setName(post.getName());
         newPost.setBody(post.getBody());
-//        newPost.setCommentList(post.getCommentList());
+        newPost.setBlogger(blogger);
         return postRepository.save(newPost);
     }
 
@@ -41,7 +40,6 @@ public class PostService extends GenericService {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
         existingPost.setName(post.getName());
         existingPost.setBody(post.getBody());
-//        existingPost.setCommentList(post.getCommentList());
         return postRepository.save(existingPost);
     }
 

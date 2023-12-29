@@ -1,11 +1,22 @@
 package lt.karijotas.microblogging.model.mapper;
 
+import lt.karijotas.microblogging.dao.BloggerRepository;
+import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
+import lt.karijotas.microblogging.service.BloggerService;
+import org.springframework.beans.factory.annotation.Autowired;
 ;
 
 public class PostMapper {
+
+    private final BloggerService bloggerService;
+
+    public PostMapper(BloggerService bloggerService) {
+        this.bloggerService = bloggerService;
+    }
+
     public static PostEntityDto toPostEntityDto(Post post) {
         var postEntityDto = new PostEntityDto();
         postEntityDto.setId(postEntityDto.getId());
@@ -15,11 +26,13 @@ public class PostMapper {
         return postEntityDto;
     }
 
-    public static Post toPost(PostEntityDto entityDto) {
+    public Post toPost(PostEntityDto entityDto) {
         var post = new Post();
         post.setId(entityDto.getId());
         post.setName(entityDto.getName());
         post.setBody(entityDto.getBody());
+        post.setBlogger(bloggerService.getById(entityDto.getId()).orElseThrow(
+                () -> new BlogValidationExeption("blogger doesn't exist", "id", "blogger doesn't exist", entityDto.getId().toString())));
         return post;
     }
 
@@ -29,7 +42,8 @@ public class PostMapper {
         post.setBody(entityDto.getBody());
         return post;
     }
-    public static PostDto toPostDto(Post post){
+
+    public static PostDto toPostDto(Post post) {
         var postDto = new PostDto();
         postDto.setName(post.getName());
         postDto.setBody(post.getBody());

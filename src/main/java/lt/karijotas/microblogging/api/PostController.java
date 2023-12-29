@@ -48,7 +48,8 @@ public class PostController {
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostEntityDto> create(@Valid @RequestBody PostEntityDto postEntityDto) {
-        var createdPost = postService.create(toPost(postEntityDto));
+
+        var createdPost = postService.create(postEntityDto);
         return ok(toPostEntityDto(createdPost));
     }
 

@@ -15,10 +15,8 @@ public class BloggerMapper {
 
     public static Blogger toUser(BloggerEntityDto entityDto){
         var user = new Blogger();
-        user.setId(entityDto.getId());
         user.setUserName(entityDto.getName());
         user.setPassword(entityDto.getPassword());
-//        user.setPostList(entityDto.getPostList());
         return user;
     }
 }
