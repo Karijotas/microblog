@@ -6,7 +6,7 @@ Built with MVC pattern
 
 2 - install frontend with npm install 
 
-3 - start frontend with npm run
+3 - start frontend with npm start
 
 Access the app with http://localhost:8080/login
 
