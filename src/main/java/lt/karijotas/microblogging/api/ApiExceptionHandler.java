@@ -73,6 +73,7 @@ public class ApiExceptionHandler {
                 LocalDateTime.now());
         return ResponseEntity.badRequest().body(errorDto);
     }
+
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "We do not support this")
     @ExceptionHandler(HttpMediaTypeException.class)
     public void handleHttpMediaTypeException(HttpMediaTypeException mediaTypeException) {

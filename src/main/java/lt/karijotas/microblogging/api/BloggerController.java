@@ -61,6 +61,7 @@ public class BloggerController {
             return ResponseEntity.ok("No authenticated user found.");
         }
     }
+
     @GetMapping("/current-user/id")
     public ResponseEntity<Long> getCurrentUserId(@AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();

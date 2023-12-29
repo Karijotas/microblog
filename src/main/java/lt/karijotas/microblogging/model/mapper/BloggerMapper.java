@@ -13,7 +13,7 @@ public class BloggerMapper {
         return userEntityDto;
     }
 
-    public static Blogger toUser(BloggerEntityDto entityDto){
+    public static Blogger toUser(BloggerEntityDto entityDto) {
         var user = new Blogger();
         user.setUserName(entityDto.getName());
         user.setPassword(entityDto.getPassword());

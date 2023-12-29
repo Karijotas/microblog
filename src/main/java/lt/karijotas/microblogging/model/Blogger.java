@@ -21,6 +21,7 @@ public class Blogger {
     private String password;
     @OneToMany(mappedBy = "blogger")
     private List<Post> posts;
+
     public Blogger() {
     }
 
@@ -75,12 +76,4 @@ public class Blogger {
                 ", password='" + password + '\'' +
                 '}';
     }
-
-//    public List<Post> getPostList() {
-//        return postList;
-//    }
-//
-//    public void setPostList(List<Post> postList) {
-//        this.postList = postList;
-//    }
 }

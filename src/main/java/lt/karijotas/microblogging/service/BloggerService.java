@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BloggerService extends GenericService{
+public class BloggerService extends GenericService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
 
@@ -35,14 +35,17 @@ public class BloggerService extends GenericService{
         return bloggerRepository.save(existingBlogger);
     }
 
- public Blogger findByUserName(String username){
-     return   bloggerRepository.findByUserName(username);
- };
+    public Blogger findByUserName(String username) {
+        return bloggerRepository.findByUserName(username);
+    }
+
+    ;
 
     @Override
     public List<Blogger> getAll() {
         return bloggerRepository.findAll();
     }
+
     @Override
     public Optional<Blogger> getById(Long id) {
         return bloggerRepository.findById(id);

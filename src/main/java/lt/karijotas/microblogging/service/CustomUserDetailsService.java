@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws BlogValidationExeption {
         Blogger blogger = userRepository.findByUserName(username);
         if (blogger == null) {
             throw new BlogValidationExeption("User not found");

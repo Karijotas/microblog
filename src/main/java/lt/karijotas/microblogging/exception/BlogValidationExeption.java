@@ -7,7 +7,9 @@ public class BlogValidationExeption extends RuntimeException {
 
     private String rejectedValue;
 
-    public BlogValidationExeption(String userNotFound) {
+
+    public BlogValidationExeption(String message) {
+        super(message);
     }
 
     public BlogValidationExeption(String message, String field, String error, String rejectedValue) {

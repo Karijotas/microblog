@@ -79,7 +79,7 @@ public class PostService extends GenericService {
     @Override
     public Boolean deleteById(Long id) {
         try {
-            bloggerRepository.deleteById(id);
+            postRepository.deleteById(id);
             return true;
         } catch (EmptyResultDataAccessException e) {
             return false;
