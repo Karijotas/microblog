@@ -24,21 +24,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable())
-                .authorizeRequests(authorize -> authorize
-                        .requestMatchers("/blogger/register", "/swagger-ui/**", "/current-user/id").permitAll()
+        http.csrf((csrf) -> csrf.disable()).
+                authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/blogger/register").permitAll()
+                        .requestMatchers("/swagger-ui/").permitAll()
+                        .requestMatchers("/post/user").permitAll()
+                        .requestMatchers("blogger/current-user/id").permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
+                ).formLogin(formLogin -> formLogin
                         .defaultSuccessUrl("http://localhost:3000")
                 )
                 .httpBasic(Customizer.withDefaults())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"));
+                .formLogin(Customizer.withDefaults())
+                .logout(Customizer.withDefaults());
+
         return http.build();
     }
 

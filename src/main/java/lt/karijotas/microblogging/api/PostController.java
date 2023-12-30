@@ -4,15 +4,20 @@ import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
+import lt.karijotas.microblogging.service.BloggerService;
 import lt.karijotas.microblogging.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,15 +29,28 @@ import static org.springframework.http.ResponseEntity.ok;
 public class PostController {
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
+    private final BloggerService bloggerService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, BloggerService bloggerService) {
         this.postService = postService;
+        this.bloggerService = bloggerService;
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
     @ResponseBody
     public List<Post> getAll() {
         return postService.getAll();
+    }
+
+    @GetMapping(value = "/user", produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @ResponseBody
+    public List<Post> getAllByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            String username = userDetails.getUsername();
+            Long id = bloggerService.findByUserName(username).getId();
+            return postService.getAllByAuthor(id);
+        }
+        return null;
     }
 
     @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE,})
@@ -48,7 +66,6 @@ public class PostController {
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostEntityDto> create(@Valid @RequestBody PostEntityDto postEntityDto) {
-
         var createdPost = postService.create(postEntityDto);
         return ok(toPostEntityDto(createdPost));
     }

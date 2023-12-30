@@ -20,7 +20,6 @@ public class BloggerService extends GenericService {
         this.bloggerRepository = bloggerRepository;
     }
 
-
     public Blogger create(Blogger blogger) {
         return bloggerRepository.save(blogger);
     }
@@ -36,8 +35,6 @@ public class BloggerService extends GenericService {
     public Blogger findByUserName(String username) {
         return bloggerRepository.findBloggerByUserName(username);
     }
-
-
 
     @Override
     public List<Blogger> getAll() {
@@ -57,5 +54,13 @@ public class BloggerService extends GenericService {
         } catch (EmptyResultDataAccessException e) {
             return false;
         }
+    }
+
+    public List<Blogger> getAllNotCurrentUsers(String username) {
+        Long id = findByUserName(username).getId();
+        return bloggerRepository.findAll()
+                .stream()
+                .filter(blogger -> !blogger.getId().equals(id))
+                .toList();
     }
 }

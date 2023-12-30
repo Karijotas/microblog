@@ -10,10 +10,13 @@ export function Home() {
     const [wordCount, setWordCount] = useState(null);
     const [commonWords, setCommonWords] = useState(new Map());
     const [currentUser, setCurrentUser] = useState("");
+    const [others, setOthers] = useState([]);
+
 
     useEffect(() => {
         fetchPost();
         fetchUser();
+        fetchOtherUsers();
     }, []);
 
     useEffect(() => {
@@ -41,7 +44,7 @@ export function Home() {
     };
 
     const fetchPost = () => {
-        fetch(`/post`)
+        fetch(`/post/user`)
             .then((response) => response.json())
             .then((jsonResponse) => {
                 const updatedPosts = jsonResponse.map((post) => ({
@@ -56,6 +59,15 @@ export function Home() {
         fetch(`/blogger/current-user`)
             .then((response) => response.text())
             .then((textResponse) => setCurrentUser(textResponse))
+            .catch((error) => {
+                console.error("Error fetching current user:", error);
+            });
+    };
+
+    const fetchOtherUsers = () => {
+        fetch(`/blogger/others`)
+            .then((response) => response.json())
+            .then((textResponse) => setOthers(textResponse))
             .catch((error) => {
                 console.error("Error fetching current user:", error);
             });
@@ -114,8 +126,11 @@ export function Home() {
     };
     return (
         <main className="text-center">
-            <h1>BLOG</h1>
+
+            <h1>BLOG</h1> 
+
             <h6>{currentUser ? "Current user is: " + currentUser : ''}</h6>
+            {others.map((other) => (<ul><li>{other.userName}</li><li>asd</li></ul>))}
             <Button
                 className="m-1"
                 variant="primary"

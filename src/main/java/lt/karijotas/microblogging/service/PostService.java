@@ -19,10 +19,13 @@ public class PostService extends GenericService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
 
+    private final BloggerService bloggerService;
+
     @Autowired
-    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
+    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository, BloggerService bloggerService) {
         this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
+        this.bloggerService = bloggerService;
     }
 
     public Post create(PostEntityDto post) {
@@ -74,6 +77,10 @@ public class PostService extends GenericService {
     public List<Post> getAll() {
         return postRepository.findAll();
 
+    }
+
+    public List<Post> getAllByAuthor(Long id) {
+        return postRepository.findAllByBloggerId(id);
     }
 
     @Override

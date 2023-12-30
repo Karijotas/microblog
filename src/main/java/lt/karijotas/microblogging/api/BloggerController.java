@@ -2,6 +2,7 @@ package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
+import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.BloggerEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
 import org.slf4j.Logger;
@@ -69,5 +70,15 @@ public class BloggerController {
             return ResponseEntity.ok(id.toString());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No authenticated user found.");
+    }
+
+    @GetMapping(value = "/others", produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @ResponseBody
+    public List<Blogger> getAllNotCurrentUsers(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            String username = userDetails.getUsername();
+            return bloggerService.getAllNotCurrentUsers(username);
+        }
+        return null;
     }
 }
