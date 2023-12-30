@@ -15,19 +15,16 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private BloggerRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws BlogValidationExeption {
-        Blogger blogger = userRepository.findByUserName(username);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Blogger blogger = userRepository.findBloggerByUserName(username);
         if (blogger == null) {
             throw new BlogValidationExeption("User not found");
         }
-        String encodedPassword = passwordEncoder.encode(blogger.getPassword());
         return User.builder()
                 .username(blogger.getUserName())
-                .password(encodedPassword)
+                .password(blogger.getPassword())
                 .roles("USER")
                 .build();
     }

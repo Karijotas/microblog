@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -23,18 +24,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf((csrf) -> csrf.disable()).
-                authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/blogger/register").permitAll()
-                        .requestMatchers("/swagger-ui/").permitAll()
+        http.csrf((csrf) -> csrf.disable())
+                .authorizeRequests(authorize -> authorize
+                        .requestMatchers("/blogger/register", "/swagger-ui/**", "/current-user/id").permitAll()
                         .anyRequest().authenticated()
-                ).formLogin(formLogin -> formLogin
+                )
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
                         .defaultSuccessUrl("http://localhost:3000")
                 )
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
-
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"));
         return http.build();
     }
 

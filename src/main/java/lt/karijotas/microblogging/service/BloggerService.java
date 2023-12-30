@@ -13,13 +13,11 @@ import java.util.Optional;
 
 @Service
 public class BloggerService extends GenericService {
-    private final BloggerRepository bloggerRepository;
-    private final PostRepository postRepository;
+    private BloggerRepository bloggerRepository;
 
     @Autowired
-    public BloggerService(BloggerRepository bloggerRepository, PostRepository postRepository) {
+    public BloggerService(BloggerRepository bloggerRepository) {
         this.bloggerRepository = bloggerRepository;
-        this.postRepository = postRepository;
     }
 
 
@@ -36,10 +34,10 @@ public class BloggerService extends GenericService {
     }
 
     public Blogger findByUserName(String username) {
-        return bloggerRepository.findByUserName(username);
+        return bloggerRepository.findBloggerByUserName(username);
     }
 
-    ;
+
 
     @Override
     public List<Blogger> getAll() {

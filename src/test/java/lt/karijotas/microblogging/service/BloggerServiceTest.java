@@ -21,13 +21,8 @@ public class BloggerServiceTest {
 
     @Mock
     private BloggerRepository bloggerRepository;
-
-    @Mock
-    private PostRepository postRepository;
-
     @InjectMocks
     private BloggerService bloggerService;
-
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -79,10 +74,8 @@ public class BloggerServiceTest {
         existingBlogger.setUserName("JohnDoe");
         existingBlogger.setPassword("password");
 
-        when(bloggerRepository.findByUserName("JohnDoe")).thenReturn(existingBlogger);
-
+        when(bloggerRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
         Blogger foundBlogger = bloggerService.findByUserName("JohnDoe");
-
         assertThat(foundBlogger).isNotNull();
         assertThat(foundBlogger.getId()).isEqualTo(1L);
         assertThat(foundBlogger.getUserName()).isEqualTo("JohnDoe");

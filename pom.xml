@@ -10,7 +10,7 @@
     </parent>
     <groupId>lt.karijotas</groupId>
     <artifactId>microblogging</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2</version>
     <packaging>war</packaging>
     <name>microblogging</name>
     <description>microblogging</description>
@@ -61,6 +61,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test-autoconfigure</artifactId>
+            <version>3.2.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
