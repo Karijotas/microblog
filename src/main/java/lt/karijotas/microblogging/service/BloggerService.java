@@ -1,11 +1,14 @@
 package lt.karijotas.microblogging.service;
 
+import lt.karijotas.microblogging.configuration.PasswordEncoderConfig;
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.Optional;
 @Service
 public class BloggerService extends GenericService {
     private BloggerRepository bloggerRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public BloggerService(BloggerRepository bloggerRepository) {
@@ -21,7 +26,11 @@ public class BloggerService extends GenericService {
     }
 
     public Blogger create(Blogger blogger) {
-        return bloggerRepository.save(blogger);
+        var newUser = new Blogger();
+        newUser.setUserName(blogger.getUserName());
+        String encodedPassword = passwordEncoder.encode(blogger.getPassword());
+        newUser.setPassword(encodedPassword);
+        return bloggerRepository.save(newUser);
     }
 
     public Blogger update(Blogger blogger, Long id) {

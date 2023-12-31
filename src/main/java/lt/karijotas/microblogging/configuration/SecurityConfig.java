@@ -31,12 +31,15 @@ public class SecurityConfig {
                         .requestMatchers("/post/user").permitAll()
                         .requestMatchers("blogger/current-user/id").permitAll()
                         .anyRequest().authenticated()
-                ).formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("http://localhost:3000")
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
+                .formLogin(formLogin -> formLogin
+                        .defaultSuccessUrl("/"))
+                .logout(logout -> logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
 
         return http.build();
     }

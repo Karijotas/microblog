@@ -31,13 +31,13 @@ public class BloggerController {
         this.bloggerService = bloggerService;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Blogger> getAll() {
         return bloggerService.getAll();
     }
 
-    @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<BloggerEntityDto> getUser(@PathVariable Long userId) {
         var userOptional = bloggerService.getById(userId);
 
@@ -52,7 +52,7 @@ public class BloggerController {
         return ok(createdUser);
     }
 
-    @GetMapping("/current-user")
+    @GetMapping(value = "/current-user",produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
@@ -62,7 +62,7 @@ public class BloggerController {
         }
     }
 
-    @GetMapping("/current-user/id")
+    @GetMapping(value = "/current-user/id" ,produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> getCurrentUserId(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
@@ -72,7 +72,7 @@ public class BloggerController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No authenticated user found.");
     }
 
-    @GetMapping(value = "/others", produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(value = "/others", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Blogger> getAllNotCurrentUsers(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {

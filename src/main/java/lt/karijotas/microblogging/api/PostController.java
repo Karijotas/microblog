@@ -36,32 +36,35 @@ public class PostController {
         this.bloggerService = bloggerService;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Post> getAll() {
         return postService.getAll();
     }
 
-    @GetMapping(value = "/user", produces = {MediaType.APPLICATION_JSON_VALUE,})
-    @ResponseBody
-    public List<Post> getAllByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping(value = "/user", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<Post>> getAllByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
             Long id = bloggerService.findByUserName(username).getId();
-            return postService.getAllByAuthor(id);
+            return ResponseEntity.ok(postService.getAllByCurrentAuthor(id));
         }
         return null;
     }
 
-    @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(value = "/user/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseBody
+    public List<Post> getAllByUserId(@PathVariable Long userId) {
+            return postService.getAllByAuthor(userId);
+    }
+
+    @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostEntityDto> getPost(@PathVariable Long postId) {
         var postOptional = postService.getById(postId);
 
-        var responseEntity = postOptional
+        return postOptional
                 .map(post -> ok(toPostEntityDto(post)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
-
-        return responseEntity;
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -96,7 +99,7 @@ public class PostController {
     }
 
 
-    @GetMapping(value = "/{postId}/wordcount/{limit}", produces = {MediaType.APPLICATION_JSON_VALUE,})
+    @GetMapping(value = "/{postId}/wordcount/{limit}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Map<String, Long>> mostUsedWords(@PathVariable Long postId, @PathVariable Long limit) {
         Post post = postService.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));

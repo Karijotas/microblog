@@ -78,9 +78,19 @@ public class PostService extends GenericService {
         return postRepository.findAll();
 
     }
+    public List<Post> getAllByCurrentAuthor(Long id) {
+        return postRepository.findAllByBloggerId(id);
+    }
 
     public List<Post> getAllByAuthor(Long id) {
-        return postRepository.findAllByBloggerId(id);
+        List<Post> posts = postRepository.findAllByBloggerId(id);
+        posts.stream().forEach(post -> increaseViewCount(post));
+        return posts;
+    }
+
+    private void increaseViewCount(Post post) {
+        post.setCount(post.getCount() +1);
+        postRepository.save(post);
     }
 
     @Override
