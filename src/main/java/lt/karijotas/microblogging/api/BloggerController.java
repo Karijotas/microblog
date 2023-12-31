@@ -52,7 +52,7 @@ public class BloggerController {
         return ok(createdUser);
     }
 
-    @GetMapping(value = "/current-user",produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/current-user", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
@@ -62,7 +62,7 @@ public class BloggerController {
         }
     }
 
-    @GetMapping(value = "/current-user/id" ,produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(value = "/current-user/id", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> getCurrentUserId(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();

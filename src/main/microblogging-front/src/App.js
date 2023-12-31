@@ -1,12 +1,11 @@
 import './App.css';
-import { Home } from './Pages/Home';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import { Register } from './Pages/Register';
-import { Post } from './Pages/Post';
 import { Counter } from './Pages/Counter';
-import { Update } from './Pages/Update';
-
+import { Feed } from './Pages/Home';
+import { Register } from './Pages/Register';
+import { Create } from './Pages/Create';
+import { Post } from './Pages/Post';
 
 function App() {
   return (
@@ -14,11 +13,11 @@ function App() {
       <Counter/>
       <HashRouter >
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Feed />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/post' element={<Post />} />
-          <Route path='/update/:id' element={<Update/>} />
-          
+          <Route path='/post' element={<Create />} />
+          {/* <Route path='/update/:id' element={<Update/>} /> */}
+          <Route path='/user/:id' element={<Post/>} />
 
         </Routes>
       </HashRouter>

@@ -280,3 +280,7 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: /home/mantas/Pro
 	... 119 more
 2023-12-31 17:03:30 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-220]
+2023-12-31 18:52:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-220]
+2023-12-31 19:27:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-220]

@@ -16,12 +16,12 @@ import java.util.Optional;
 
 @Service
 public class BloggerService extends GenericService {
-    private BloggerRepository bloggerRepository;
+    private final BloggerRepository bloggerRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public BloggerService(BloggerRepository bloggerRepository,PasswordEncoder passwordEncoder) {
+    public BloggerService(BloggerRepository bloggerRepository, PasswordEncoder passwordEncoder) {
         this.bloggerRepository = bloggerRepository;
         this.passwordEncoder = passwordEncoder;
     }

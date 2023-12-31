@@ -14,29 +14,34 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
+
 @Service
 public class PostService extends GenericService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
 
-    private final BloggerService bloggerService;
-
     @Autowired
-    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository, BloggerService bloggerService) {
+    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
         this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
-        this.bloggerService = bloggerService;
+    }
+
+    public Boolean validateLength(Post post) {
+        return !post.getBody().isEmpty() || !post.getName().isEmpty();
     }
 
     public Post create(PostEntityDto post) {
         Blogger blogger = bloggerRepository.getById(post.getBloggerId());
-
-        var newPost = new Post();
-        newPost.setId(post.getId());
-        newPost.setName(post.getName());
-        newPost.setBody(post.getBody());
-        newPost.setBlogger(blogger);
-        return postRepository.save(newPost);
+        if (validateLength(toPost(post))) {
+            var newPost = new Post();
+            newPost.setId(post.getId());
+            newPost.setName(post.getName());
+            newPost.setBody(post.getBody());
+            newPost.setBlogger(blogger);
+            return postRepository.save(newPost);
+        }
+        throw new BlogValidationExeption("Post title and body shouldn't be empty");
     }
 
     public Post update(Post post, Long id) {
@@ -78,24 +83,30 @@ public class PostService extends GenericService {
         return postRepository.findAll();
 
     }
+
     public List<Post> getAllByCurrentAuthor(Long id) {
         return postRepository.findAllByBloggerId(id);
     }
 
     public List<Post> getAllByAuthor(Long id) {
         List<Post> posts = postRepository.findAllByBloggerId(id);
-        posts.stream().forEach(post -> increaseViewCount(post));
+        posts.forEach(this::increaseViewCount);
         return posts;
     }
 
     private void increaseViewCount(Post post) {
-        post.setCount(post.getCount() +1);
+        if (post.getCount() == null) {
+            post.setCount(1);
+        } else {
+            post.setCount(post.getCount() + 1);
+        }
         postRepository.save(post);
     }
 
-    public Boolean validateOwnership(Long userId, Long postId){
+    public Boolean validateOwnership(Long userId, Long postId) {
         return postRepository.findById(postId).stream().anyMatch(post -> post.getBlogger().getId().equals(userId));
     }
+
     @Override
     public Boolean deleteById(Long id) {
         try {
@@ -110,4 +121,5 @@ public class PostService extends GenericService {
     public Optional<Post> getById(Long id) {
         return postRepository.findById(id);
     }
+
 }

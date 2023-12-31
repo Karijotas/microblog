@@ -15,7 +15,9 @@ export function Register() {
     const [isRegistering, setIsRegistering] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [id, setId] = useState(1);
+    const [isUsernameValid, setIsUsernameValid] = useState(true);
+    const [isPasswordValid, setIsPasswordValid] = useState(true);
+
 
     useEffect(() => {
         const register = () => new Promise((resolve) => setTimeout(resolve, 2000));
@@ -28,6 +30,16 @@ export function Register() {
     }, [isRegistering]);
 
     const create = () => {
+        if (!userName.trim()) {
+            setIsUsernameValid(false);
+            return;
+        }
+
+        if (!isPasswordSecure(password)) {
+            setIsPasswordValid(false);
+            return;
+        }
+
         fetch("/blogger/register", {
             method: "POST",
             headers: JSON_HEADERS,
@@ -38,30 +50,55 @@ export function Register() {
         }).then(applyResult);
     };
 
+    const isPasswordSecure = (password) => {
+        return password.length >= 8;
+    };
+
     const applyResult = () => {
         window.location.href = "http://localhost:8080/logout"
     };
 
 
     const handleRegister = () => create();
-
     return (
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6">
+                    <Form>
+                        <Form.Group controlId="formGroupEmail">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="name" placeholder="Enter Username" onChange={(e) => nameHandler(e)} />
 
-        <body>
-            <div class="container">
-                <form class="form-signin" method="post" action="/login">
-                    <h2 class="form-signin-heading">Please sign in</h2>
-                    <div class="alert alert-success" role="alert">You have been signed out</div>        <p>
-                        <label for="username" class="sr-only">Username</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus/>
-                    </p>
-                    <p>
-                        <label for="password" class="sr-only">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required/>
-                    </p>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                </form>
+                        </Form.Group>
+
+                        <Form.Group controlId="formGroupPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Enter Password" onChange={(e) => passwordHandler(e)} />
+                        </Form.Group>
+
+                        <Button
+                            className="btn-block"
+                            variant="primary"
+                            disabled={isRegistering}
+                            onClick={!isRegistering ? handleRegister : null}
+                        >
+                            {isRegistering ? 'Loading…' : 'Register'}
+                        </Button>
+
+                        {/* Validation feedback */}
+                        {!isUsernameValid && (
+                            <Form.Text className="text-danger">
+                                Username cannot be empty.
+                            </Form.Text>
+                        )}
+                        {!isPasswordValid && (
+                            <Form.Text className="text-danger">
+                                Password is insecure. Please use a secure password.
+                            </Form.Text>
+                        )}
+                    </Form>
+                </div>
             </div>
-        </body>
+        </div>
     );
 }

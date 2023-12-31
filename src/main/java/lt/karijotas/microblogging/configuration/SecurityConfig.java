@@ -27,11 +27,12 @@ public class SecurityConfig {
         http.csrf((csrf) -> csrf.disable()).
                 authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/blogger/register").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/swagger-ui/").permitAll()
                         .requestMatchers("/post/user").permitAll()
                         .requestMatchers("blogger/current-user/id").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/resources/**").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .formLogin(formLogin -> formLogin

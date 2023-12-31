@@ -3,7 +3,7 @@ import { Button, Card, ListGroup } from "react-bootstrap";
 import { Link, json } from "react-router-dom";
 import { Counter } from "./Counter";
 
-export function Home() {
+export function Feed() {
     const [isLogin, setLogin] = useState(false);
     const [isRegister, setRegister] = useState(false);
     const [posts, setPosts] = useState([]);
@@ -126,12 +126,24 @@ export function Home() {
         window.location.href = "#/post"
     };
     return (
-        <main className="text-center">
-
+        <main className="text-center"> <div className="d-flex flex-column align-items-start">
+            <ListGroup className="w-20">
+                {others.map((other) => (
+                    <ListGroup.Item
+                        key={other.id}
+                        action
+                        as={Link}
+                        to={`/user/${other.id}`}
+                        variant="primary"
+                    >
+                        {other.userName}
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+        </div>
             <h1>BLOG</h1>
-
             <h6>{currentUser ? "Current user is: " + currentUser : ''}</h6>
-            {/* {others.map((other) => (<ul key={other.id}><li>{other.userName}</li></ul>))} */}
+
             <Button
                 className="m-1"
                 variant="primary"
