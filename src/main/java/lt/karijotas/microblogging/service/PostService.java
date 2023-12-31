@@ -8,7 +8,6 @@ import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -121,5 +120,4 @@ public class PostService extends GenericService {
     public Optional<Post> getById(Long id) {
         return postRepository.findById(id);
     }
-
 }

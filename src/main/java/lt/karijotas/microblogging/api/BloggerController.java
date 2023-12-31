@@ -1,8 +1,6 @@
 package lt.karijotas.microblogging.api;
 
-import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
-import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.BloggerEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
 import org.slf4j.Logger;

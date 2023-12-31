@@ -1,13 +1,12 @@
 package lt.karijotas.microblogging.model.mapper;
 
-import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
-import org.springframework.beans.factory.annotation.Autowired;
-;
+
+
 
 public class PostMapper {
 
