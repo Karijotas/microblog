@@ -12,16 +12,17 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
-import static lt.karijotas.microblogging.model.mapper.PostMapper.toPostEntityDto;
+import static lt.karijotas.microblogging.model.mapper.PostMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class PostControllerTest {
 
@@ -135,24 +136,37 @@ class PostControllerTest {
     @Test
     void deletePost_PostExists_ReturnsNoContent() {
         Long postId = 1L;
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn("username");
 
+        Blogger blogger = mock(Blogger.class);
+        when(bloggerService.findByUserName(anyString())).thenReturn(blogger);
+        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
         when(postService.deleteById(postId)).thenReturn(true);
 
-        ResponseEntity<Void> responseEntity = postController.deletePost(postId);
-
-        assertEquals(204, responseEntity.getStatusCodeValue());
+        ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        verify(postService).deleteById(postId);
+        verify(bloggerService).findByUserName("username");
     }
+
 
     @Test
     void updatePost_ValidPostDto_ReturnsUpdatedPostDto() {
         Long postId = 1L;
         PostDto postDto = new PostDto();
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn("username");
 
         Post updatedPost = new Post();
         when(postService.update(any(Post.class), eq(postId))).thenReturn(updatedPost);
+        Blogger mockedBlogger = mock(Blogger.class);
+        when(mockedBlogger.getId()).thenReturn(1L);
+        when(bloggerService.findByUserName(anyString())).thenReturn(mockedBlogger);
+        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
+        when(postService.update(any(Post.class), anyLong())).thenReturn(updatedPost);
 
-        ResponseEntity<PostDto> responseEntity = postController.updatePost(postId, postDto);
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        ResponseEntity<PostDto> responseEntity = postController.updatePost(postId, postDto, userDetails);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

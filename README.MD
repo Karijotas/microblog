@@ -2,12 +2,8 @@ A test task - microblogging app
 
 Built with MVC pattern
 
-1 - start backend with mvn spring-boot:run inside the top directory.
+* install the app with mvn clean install, and then start the app with spring-boot:run
 
-2 - install frontend with npm install 
-
-3 - start frontend with npm start
-
-Access the app with http://localhost:8080/login
+* Access the app with http://localhost:8080
 
 Sign in with qa/qa

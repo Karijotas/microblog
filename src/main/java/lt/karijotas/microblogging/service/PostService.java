@@ -93,6 +93,9 @@ public class PostService extends GenericService {
         postRepository.save(post);
     }
 
+    public Boolean validateOwnership(Long userId, Long postId){
+        return postRepository.findById(postId).stream().anyMatch(post -> post.getBlogger().getId().equals(userId));
+    }
     @Override
     public Boolean deleteById(Long id) {
         try {

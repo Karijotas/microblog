@@ -55,7 +55,7 @@ public class PostController {
     @GetMapping(value = "/user/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Post> getAllByUserId(@PathVariable Long userId) {
-            return postService.getAllByAuthor(userId);
+        return postService.getAllByAuthor(userId);
     }
 
     @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -74,20 +74,32 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
-        logger.info("Attempt to delete Post by id: {}", postId);
-        boolean deleted = postService.deleteById(postId);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            Long id = bloggerService.findByUserName(userDetails.getUsername()).getId();
+            if (postService.validateOwnership(id, postId)) {
+                logger.info("Attempt to delete Post by id: {}", postId);
+                boolean deleted = postService.deleteById(postId);
+                if (deleted) {
+                    return ResponseEntity.noContent().build();
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            }
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable Long postId, @Valid @RequestBody PostDto postDto) {
-        var updated = postService.update(toPost(postDto), postId);
-        return ok(toPostDto(updated));
+    public ResponseEntity<PostDto> updatePost(@PathVariable Long postId, @Valid @RequestBody PostDto postDto, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            Long id = bloggerService.findByUserName(userDetails.getUsername()).getId();
+            if (postService.validateOwnership(id, postId)) {
+                var updated = postService.update(toPost(postDto), postId);
+                return ok(toPostDto(updated));
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping(value = "/{postId}/wordcount", produces = MediaType.APPLICATION_JSON_VALUE)

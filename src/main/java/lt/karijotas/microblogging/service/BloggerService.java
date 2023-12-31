@@ -21,8 +21,9 @@ public class BloggerService extends GenericService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public BloggerService(BloggerRepository bloggerRepository) {
+    public BloggerService(BloggerRepository bloggerRepository,PasswordEncoder passwordEncoder) {
         this.bloggerRepository = bloggerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Blogger create(Blogger blogger) {
