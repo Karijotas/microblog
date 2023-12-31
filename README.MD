@@ -1,8 +1,13 @@
-A test task - microblogging app
+# Microblogging App
 
-Built with MVC pattern
+This microblogging application is built using the MVC pattern.
 
-* install and start the app with mvn clean install spring-boot:run
+### Installation and Startup
+
+To install and start the app, use the following command:
+
+mvn clean install spring-boot:run
+
 
 * Access the app with http://localhost:8080
 
