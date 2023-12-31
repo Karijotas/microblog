@@ -12,6 +12,7 @@ export function Create() {
     const [bloggerId, setCurrentUser] = useState("");
     const [isTitleValid, setIsTitleValid] = useState(true);
     const [isBodyValid, setIsBodyValid] = useState(true);
+    const [isBack, setBack] = useState(false);
 
 
     const handlePostBodyChange = (e) => {
@@ -66,10 +67,20 @@ export function Create() {
         setIsCreatingPost(true);
         createPost();
     };
-
+    const handleBack = () => {
+        window.location.href = "/"
+    };
 
     return (
         <div className="container mt-5">
+            <Button
+                className="d-flex justify-content-between align-items-center mb-3"
+                variant="dark"
+                disabled={isBack}
+                onClick={!isBack ? handleBack : null}
+            >
+                {isBack ? 'Loading…' : 'Return to the feed'}
+            </Button>
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <Form>

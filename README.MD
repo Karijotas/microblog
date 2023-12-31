@@ -1,20 +1,23 @@
 # Microblogging App
 
-This microblogging application is built using the MVC pattern.
+This microblogging application was built using the MVC architectural pattern.
 
 ### Installation and Startup
 
 To install and start the app, use the following command:
 
-mvn clean install spring-boot:run
+    mvn clean install spring-boot:run
 
 
-* Access the app with http://localhost:8080
+Access the app through your browser at http://localhost:8080.
+### Sign In
 
-Sign in with qa/qa
+Use the following credentials to sign in:
 
+    Username: qa
+    Password: qa
 
-RELEASE NOTES:
+### RELEASE NOTES
 
 Bugs fixed and functionality added:
 * Current user is shown incorrectly - I sign in under “blogger” but it shows “current user is qa” - Fixed by merging frontend and backend together
@@ -27,5 +30,6 @@ Bugs fixed and functionality added:
 * The logged in user has the ability to see posts of other users, navigating to their feed, that increases their post view count
 * Implemented individual post view count
 * Password security validation when registering. Cannot register if validation not met
+* Increased Blog Post length to allow for lengthy posts
 
 

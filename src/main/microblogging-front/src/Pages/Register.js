@@ -17,6 +17,7 @@ export function Register() {
     const [password, setPassword] = useState("");
     const [isUsernameValid, setIsUsernameValid] = useState(true);
     const [isPasswordValid, setIsPasswordValid] = useState(true);
+    const [isBack, setBack] = useState(false);
 
 
     useEffect(() => {
@@ -60,8 +61,19 @@ export function Register() {
 
 
     const handleRegister = () => create();
+    const handleBack = () => {
+        window.location.href = "/"
+    };
     return (
         <div className="container mt-5">
+            <Button
+                className="d-flex justify-content-between align-items-center mb-3"
+                variant="dark"
+                disabled={isBack}
+                onClick={!isBack ? handleBack : null}
+            >
+                {isBack ? 'Loading…' : 'Return to the feed'}
+            </Button>
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <Form>
@@ -93,7 +105,7 @@ export function Register() {
                         )}
                         {!isPasswordValid && (
                             <Form.Text className="text-danger">
-                                Password is insecure. Please use a secure password.
+                                Password is insecure. Please use a secure password. The length should be no less than 8 symbols
                             </Form.Text>
                         )}
                     </Form>
