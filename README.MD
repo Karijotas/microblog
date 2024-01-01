@@ -1,6 +1,6 @@
 # Microblogging App
 
-This microblogging application was built using the MVC architectural pattern.
+This microblogging application was built using the MVC architectural pattern, along with Service Layer pattern.
 
 ### Installation and Startup
 
