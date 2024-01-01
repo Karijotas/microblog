@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface PostService extends GenericService<Post, PostEntityDto> {
-    Boolean validateLength(Post post);
 
     String[] splitPost(Post post);
 

@@ -1,5 +1,7 @@
 package lt.karijotas.microblogging.service;
 
+import lt.karijotas.microblogging.model.Post;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,4 +11,5 @@ public interface GenericService<T, D> {
     List<T> getAll();
     Optional<T> getById(Long id);
     Boolean deleteById(Long id);
+    Boolean validateLength(T entity);
 }

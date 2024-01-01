@@ -42,7 +42,7 @@ Bugs fixed and functionality added:
 * Current user is shown incorrectly - I sign in under “blogger” but it shows “current user is qa” - Fixed by merging frontend and backend together
 * The website count is broken - it adds 2 views instead of 1 - Fixed by merging frontend and backend together
 * Author of the post is showed incorrectly - Fixed 
-* I am supposed to see only my posts - my blog - Fixed by creating a method to return only the current user's posts
+* I am supposed to see only my posts -in my blog - Fixed by creating a method to return only the current user's posts
 * Empty posts without title and content can be created - Fixed by adding validation
 * "mvn clean install spring-boot:run"
   * Builds and starts the whole app in one go
