@@ -45,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
         }
         throw new BlogValidationExeption("Comment shouldn't be empty");
     }
+
     @Override
     public Comment update(Comment entity, Long id) {
         throw new BlogValidationExeption("Method not implemented");

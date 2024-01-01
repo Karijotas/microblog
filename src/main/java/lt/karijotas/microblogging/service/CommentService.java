@@ -4,7 +4,6 @@ import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CommentService extends GenericService<Comment, CommentEntityDto> {
     Boolean validateLength(Comment comment);

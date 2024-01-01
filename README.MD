@@ -38,7 +38,7 @@ Or after login create your own
 ### RELEASE NOTES
 
 Bugs fixed and functionality added:
-
+* Refactored service implementation
 * Current user is shown incorrectly - I sign in under “blogger” but it shows “current user is qa” - Fixed by merging frontend and backend together
 * The website count is broken - it adds 2 views instead of 1 - Fixed by merging frontend and backend together
 * Author of the post is showed incorrectly - Fixed 
@@ -55,7 +55,6 @@ Bugs fixed and functionality added:
 * Fixed update view not displaying Post title and body
 * Implemented Docker containerization for the app
 * Users can delete posts on their own posts, they cannot delete comments in the posts of other users
-* Refactored service implementation
 
 
 ![img.png](img.png)

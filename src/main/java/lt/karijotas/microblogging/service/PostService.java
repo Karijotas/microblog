@@ -5,7 +5,6 @@ import lt.karijotas.microblogging.model.dto.PostEntityDto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public interface PostService extends GenericService<Post, PostEntityDto> {
     Boolean validateLength(Post post);
