@@ -69,6 +69,11 @@ public class BloggerServiceImpl implements BloggerService {
     }
 
     @Override
+    public Boolean validateLength(Blogger entity) {
+       throw new BlogValidationExeption("Not implemented");
+    }
+
+    @Override
     public List<Blogger> getAllNotCurrentUsers(String username) {
         Long id = findByUserName(username).getId();
         return bloggerRepository.findAll()
