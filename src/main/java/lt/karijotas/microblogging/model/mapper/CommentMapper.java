@@ -18,7 +18,6 @@ public class CommentMapper {
         var newComment = new Comment();
         newComment.setId(entityDto.getId());
         newComment.setContent(entityDto.getContent());
-        newComment.setPost(getPost(entityDto.getPostId()));
         return newComment;
     }
 
@@ -32,11 +31,6 @@ public class CommentMapper {
         return newEntityDto;
     }
 
-    private static Post getPost(Long postId) {
-        try {
-            return postRepository.getById(postId);
-        } catch (Exception e) {
-            throw new BlogValidationExeption(e.getMessage());
-        }
-    }
+
+
 }

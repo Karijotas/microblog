@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, ListGroup } from "react-bootstrap";
+import { Button, Card, Form, ListGroup } from "react-bootstrap";
 import { json, useParams } from "react-router-dom";
 
 export function SinglePost() {
@@ -16,9 +16,16 @@ export function SinglePost() {
     const [postBody, setPostBody] = useState("");
     const [postCount, setPostCount] = useState("");
     const [comments, setComments] = useState([]);
+    const [refresh, setRefresh] = useState(false);
+    const [commentContent, setCommentContent] = useState("");
 
+    const JSON_HEADERS = {
+        "Content-Type": "application/json",
+    };
 
-
+    const handleCommentChange = (e) => {
+        setCommentContent(e.target.value);
+    };
 
     useEffect(() => {
         fetchUser();
@@ -48,6 +55,30 @@ export function SinglePost() {
         return new Promise((resolve) => setTimeout(resolve, 2000));
     };
 
+    const postComment = (postId) => {
+        const commentData = {
+            content: commentContent,
+            postId: postId,
+        };
+
+        fetch("/comment", {
+            method: "POST",
+            headers: JSON_HEADERS,
+            body: JSON.stringify(commentData),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    setCommentContent("");
+                    setRefresh(true);
+                } else {
+                    console.error("Error posting comment:", response.statusText);
+                }
+            })
+            .catch((error) => {
+                console.error("Error posting comment:", error);
+            });
+    };
+
     useEffect(() => {
         if (params && params.id) {
             fetch(`/post/${params.id}`)
@@ -67,8 +98,9 @@ export function SinglePost() {
                 .catch((error) => {
                     console.error("Error fetching comments:", error);
                 });
+            setRefresh(false);
         }
-    }, [params]);
+    }, [params, refresh]);
 
 
     const fetchUser = () => {
@@ -114,6 +146,14 @@ export function SinglePost() {
                     console.error("Error fetching most used words:", error);
                 });
         }
+    };
+    const remove = (id) => {
+        fetch(`/comment/${id}`, {
+            method: "DELETE",
+        });
+
+        setRefresh(true);
+
     };
 
     const handleLogout = () => {
@@ -192,18 +232,42 @@ export function SinglePost() {
 
                 <div id="comments">
                     <h3>Comments</h3>
-                    {comments.map((comment) => (
-                        <Card className="m-5" key={comment.id}>
-                            <Card.Header>Anonymous</Card.Header>
-                            <Card.Body>
-                                <blockquote className="blockquote mb-0">
-                                    <p>
-                                        {' '}
-                                        {comment.content}{' '}
-                                    </p>
-                                </blockquote>
-                            </Card.Body>
-                        </Card>
+                    <Form>
+                        <Form.Group controlId="formGroupComment">
+                            <Form.Label>Add a Comment</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                placeholder="Write your comment here..."
+                                value={commentContent}
+                                onChange={handleCommentChange}
+                            />
+                        </Form.Group>
+                        <Button
+                            variant="primary"
+                            onClick={() => postComment(params.id)}
+                            disabled={!commentContent.trim()}
+                        >
+                            Post Comment
+                        </Button>
+
+                    </Form>
+                    {comments.slice().reverse().map((comment) => (
+                        <div>
+                            <Card className="m-5" key={comment.id}>
+                                <Card.Header>Anonymous</Card.Header>
+                                <Card.Body>
+                                    <blockquote className="blockquote mb-0">
+                                        <p>
+                                            {' '}
+                                            {comment.content}{' '}
+                                        </p>
+                                    </blockquote>
+                                </Card.Body>
+                                {postAuthor === currentUser ? <Button className="m-1" size="sm" variant="danger" onClick={() => remove(comment.id)}>Delete</Button> : ""}
+                            </Card>
+                        </div>
+
                     ))}
                 </div>
             </div>

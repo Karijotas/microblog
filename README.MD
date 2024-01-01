@@ -10,7 +10,7 @@ To install and start the app, use the following command:
 
 Access the app through your browser at http://localhost:8080
 
-If you want to run the app in docker, run:
+If you want to run the app in Docker, run:
   
     docker build -t microblog .
 then
@@ -44,6 +44,7 @@ Bugs fixed and functionality added:
 * Implemented comments
 * Fixed update view not displaying Post title and body
 * Implemented Docker containerization for the app
+* Users can delete posts on their own posts, they cannot delete comments in the posts of other users
 
 
 ![img.png](img.png)

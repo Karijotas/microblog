@@ -1,5 +1,6 @@
 package lt.karijotas.microblogging.service;
 
+import lt.karijotas.microblogging.api.CommentController;
 import lt.karijotas.microblogging.dao.CommentRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
@@ -7,6 +8,8 @@ import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import lt.karijotas.microblogging.model.mapper.CommentMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import static lt.karijotas.microblogging.model.mapper.CommentMapper.toComment;
 
 @Service
 public class CommentService extends GenericService {
+    private final Logger logger = LoggerFactory.getLogger(CommentService.class);
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
