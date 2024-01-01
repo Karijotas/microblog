@@ -12,6 +12,7 @@ export function Feed() {
     const [currentUser, setCurrentUser] = useState("");
     const [others, setOthers] = useState([]);
     const [comments, setComments] = useState(null);
+    const [linkComments, setLinkComments] = useState(false);
 
 
     useEffect(() => {
@@ -135,6 +136,10 @@ export function Feed() {
     const handlePost = () => {
         window.location.href = "#/post"
     };
+    const handleComments = (id) => {
+        setLinkComments(true);
+        window.location.href = `#/comment/${id}`
+    };
     return (
         <main className="text-center">
 
@@ -216,10 +221,10 @@ export function Feed() {
                             <Button
                                 className="m-1"
                                 variant="dark"
-                                disabled={comments !== null}
-                                onClick={() => fetchCommentCount(post.id)}
+                                disabled={linkComments !== false}
+                                onClick={() => handleComments(post.id)}
                             >
-                                {comments === null ? "See comments" : comments + ' Comments'}
+                                {linkComments == false ? "See comments" : handleComments(post.id)}
                             </Button>
                             <div className="m-1">
                                 {post.commonWords.size === 0 ? (

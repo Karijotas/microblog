@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, ListGroup } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { json, useParams } from "react-router-dom";
 
-export function Post() {
+export function SinglePost() {
     const params = useParams();
     const [isLogin, setLogin] = useState(false);
     const [isRegister, setRegister] = useState(false);
@@ -11,13 +11,18 @@ export function Post() {
     const [wordCount, setWordCount] = useState(null);
     const [commonWords, setCommonWords] = useState(new Map());
     const [currentUser, setCurrentUser] = useState("");
-    const [comments, setComments] = useState(null);
-    const [linkComments, setLinkComments] = useState(false);
+    const [postAuthor, setPostAuthor] = useState("");
+    const [postTitle, setPostTitle] = useState("");
+    const [postBody, setPostBody] = useState("");
+    const [postCount, setPostCount] = useState("");
+    const [comments, setComments] = useState([]);
+
+
+
 
     useEffect(() => {
-        fetchPost();
         fetchUser();
-    }, []);
+    },);
 
     useEffect(() => {
         if (isRegister) {
@@ -43,18 +48,28 @@ export function Post() {
         return new Promise((resolve) => setTimeout(resolve, 2000));
     };
 
-    const fetchPost = () => {
-        fetch(`/post/user/${params.id}`)
-            .then((response) => response.json())
-            .then((jsonResponse) => {
-                const updatedPosts = jsonResponse.map((post) => ({
-                    ...post,
-                    wordCount: null,
-                    commonWords: new Map(),
-                }));
-                setPosts(updatedPosts);
-            });
-    };
+    useEffect(() => {
+        if (params && params.id) {
+            fetch(`/post/${params.id}`)
+                .then((response) => response.json())
+                .then((post) => {
+                    setPostAuthor(post.blogger.userName);
+                    setPostTitle(post.name);
+                    setPostBody(post.body);
+                    setPostCount(post.count);
+                })
+                .catch((error) => {
+                    console.error("Error fetching post details:", error);
+                });
+            fetch(`/comment/post/${params.id}`)
+                .then((response) => response.json())
+                .then((jsonResponse) => setComments(jsonResponse))
+                .catch((error) => {
+                    console.error("Error fetching comments:", error);
+                });
+        }
+    }, [params]);
+
 
     const fetchUser = () => {
         fetch(`/blogger/current-user`)
@@ -101,15 +116,6 @@ export function Post() {
         }
     };
 
-    const fetchCommentCount = (id) => {
-        fetch(`/comment/count/` + id)
-            .then((response) => response.text())
-            .then((textResponse) => setComments(textResponse))
-            .catch((error) => {
-                console.error("Error fetching commentCount:", error);
-            });
-    };
-
     const handleLogout = () => {
         window.location.href = "http://localhost:8080/logout"
     };
@@ -122,13 +128,6 @@ export function Post() {
     const handleBack = () => {
         window.location.href = "/"
     };
-
-
-    const handleComments = (id) => {
-        setLinkComments(true);
-        window.location.href = `#/comment/${id}`
-    };
-
     return (
 
         <main className="text-center">
@@ -171,63 +170,42 @@ export function Post() {
             </Button>
 
             <div id="login">
-                {posts.map((post) => (
-                    <Card className="mb-3" key={post.id}>
-                        <Card.Header>
-                            <h3>{post.name}</h3>
-                            <h6>Author: {post.blogger.userName} ViewCount: {post.count}</h6>
-                        </Card.Header>
-                        <Card.Body>
-                            <Card.Text>{post.body}</Card.Text>
-                        </Card.Body><div className="d-flex justify-content-end align-items-center">
-                        </div>
-                        <Card.Footer className="d-flex justify-content-between align-items-center">
-                            <Button
-                                className="m-1"
-                                variant="dark"
-                                disabled={post.wordCount !== null}
-                                onClick={() => fetchWordCount(post.id)}
-                            >
-                                {post.wordCount !== null ? post.wordCount : 'Word count'}
-                            </Button>
-                            <Button
-                                className="m-1"
-                                variant="dark"
-                                disabled={comments !== null}
-                                onClick={() => fetchCommentCount(post.id)}
-                            >
-                                {comments === null ? "Comment count" : comments + ' Comments'}
-                            </Button>
-                            <Button
-                                className="m-1"
-                                variant="dark"
-                                disabled={linkComments !== false}
-                                onClick={() => handleComments(post.id)}
-                            >
-                                {linkComments == false ? "See comments" : handleComments(post.id)}
-                            </Button>
-                            <div className="m-1">
-                                {post.commonWords.size === 0 ? (
-                                    <Button
-                                        variant="dark"
-                                        disabled={post.commonWords.size !== 0}
-                                        onClick={() => fetchMostUsedWords(post.id, 5)}
-                                    >
-                                        Most common words
-                                    </Button>
-                                ) : (
-                                    <ListGroup horizontal>
-                                        {Array.from(post.commonWords.entries()).map(([count, word]) => (
-                                            <ListGroup.Item key={count}>
-                                                {word}: {count}
-                                            </ListGroup.Item>
-                                        ))}
-                                    </ListGroup>
-                                )}
-                            </div>
-                        </Card.Footer>
-                    </Card>
-                ))}
+                <Card className="mb-3" >
+                    <Card.Header>
+                        <h3>
+                            {postTitle}
+                        </h3>
+                        <h6>Author:
+                            {postAuthor}
+
+                            ViewCount:
+                            {postCount}
+                        </h6>
+                    </Card.Header>
+                    <Card.Body>
+                        <Card.Text>
+                            {postBody}
+                        </Card.Text>
+                    </Card.Body><div className="d-flex justify-content-end align-items-center">
+                    </div>
+                </Card>
+
+                <div id="comments">
+                    <h3>Comments</h3>
+                    {comments.map((comment) => (
+                        <Card className="m-5">
+                            <Card.Header>Anonymous</Card.Header>
+                            <Card.Body>
+                                <blockquote className="blockquote mb-0">
+                                    <p>
+                                        {' '}
+                                        {comment.content}{' '}
+                                    </p>
+                                </blockquote>
+                            </Card.Body>
+                        </Card>
+                    ))}
+                </div>
             </div>
         </main>
     );
