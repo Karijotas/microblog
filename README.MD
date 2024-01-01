@@ -8,8 +8,16 @@ To install and start the app, use the following command:
 
     mvn clean install spring-boot:run
 
+Access the app through your browser at http://localhost:8080
 
-Access the app through your browser at http://localhost:8080.
+If you want to run the app in docker, run:
+  
+    docker build -t microblog .
+then
+
+    docker run -dp 127.0.0.1:8080:8080 microblog
+then you can access the app with http://127.0.0.1:8080
+
 ### Sign In
 
 Use the following credentials to sign in:
@@ -35,6 +43,7 @@ Bugs fixed and functionality added:
 * Increased Blog Post length to allow for lengthy posts
 * Implemented comments
 * Fixed update view not displaying Post title and body
+* Implemented Docker containerization for the app
 
 
 ![img.png](img.png)

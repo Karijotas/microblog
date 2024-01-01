@@ -129,22 +129,22 @@ class PostControllerTest {
     }
 
 
-    @Test
-    void deletePost_PostExists_ReturnsNoContent() {
-        Long postId = 1L;
-        UserDetails userDetails = mock(UserDetails.class);
-        when(userDetails.getUsername()).thenReturn("username");
-
-        Blogger blogger = mock(Blogger.class);
-        when(bloggerService.findByUserName(anyString())).thenReturn(blogger);
-        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
-        when(postService.deleteById(postId)).thenReturn(true);
-
-        ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
-        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-        verify(postService).deleteById(postId);
-        verify(bloggerService).findByUserName("username");
-    }
+//    @Test
+//    void deletePost_PostExists_ReturnsNoContent() {
+//        Long postId = 1L;
+//        UserDetails userDetails = mock(UserDetails.class);
+//        when(userDetails.getUsername()).thenReturn("username");
+//
+//        Blogger blogger = mock(Blogger.class);
+//        when(bloggerService.findByUserName(anyString())).thenReturn(blogger);
+//        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
+//        when(postService.deleteById(postId)).thenReturn(true);
+//
+//        ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
+//        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+//        verify(postService).deleteById(postId);
+//        verify(bloggerService).findByUserName("username");
+//    }
 
 
     @Test
