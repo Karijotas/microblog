@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class BloggerServiceImplTest {
     @Mock
     private BloggerRepository bloggerRepository;
     @InjectMocks
-    private lt.karijotas.microblogging.service.impl.BloggerServiceImpl BloggerServiceImpl;
+    private BloggerServiceImpl bloggerServiceImpl;
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -67,7 +68,7 @@ public class BloggerServiceImplTest {
         updatedBlogger.setUserName("Updated User");
         updatedBlogger.setPassword("updatedpassword");
 
-        Blogger updated = BloggerServiceImpl.update(updatedBlogger, 1L);
+        Blogger updated = bloggerServiceImpl.update(updatedBlogger, 1L);
 
         assertThat(updated).isNotNull();
         assertThat(updated.getId()).isEqualTo(existingBlogger.getId());
@@ -83,7 +84,7 @@ public class BloggerServiceImplTest {
         existingBlogger.setPassword("password");
 
         when(bloggerRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
-        Blogger foundBlogger = BloggerServiceImpl.findByUserName("JohnDoe");
+        Blogger foundBlogger = bloggerServiceImpl.findByUserName("JohnDoe");
         assertThat(foundBlogger).isNotNull();
         assertThat(foundBlogger.getId()).isEqualTo(1L);
         assertThat(foundBlogger.getUserName()).isEqualTo("JohnDoe");
@@ -97,20 +98,20 @@ public class BloggerServiceImplTest {
         bloggers.add(new Blogger());
         bloggers.add(new Blogger());
         when(bloggerRepository.findAll()).thenReturn(bloggers);
-        List<Blogger> found = BloggerServiceImpl.getAll();
+        List<Blogger> found = bloggerServiceImpl.getAll();
         assertEquals(2, found.size());
     }
 
     @Test
     void deleteById_DeletesSuccessfully() {
         doNothing().when(bloggerRepository).deleteById(anyLong());
-        boolean deleted = BloggerServiceImpl.deleteById(1L);
+        boolean deleted = bloggerServiceImpl.deleteById(1L);
         assertTrue(deleted);
     }
     @Test
     void deleteBloggerById_FailsToDeleteBlogger() {
         doThrow(EmptyResultDataAccessException.class).when(bloggerRepository).deleteById(anyLong());
-        boolean deleted = BloggerServiceImpl.deleteById(1L);
+        boolean deleted = bloggerServiceImpl.deleteById(1L);
         assertFalse(deleted);
     }
     @Test
@@ -118,7 +119,29 @@ public class BloggerServiceImplTest {
         Blogger blogger = new Blogger();
         blogger.setId(1L);
         when(bloggerRepository.findById(blogger.getId())).thenReturn(Optional.of(blogger));
-        Blogger found = BloggerServiceImpl.getById(1L).get();
+        Blogger found = bloggerServiceImpl.getById(1L).get();
         assertEquals(found, blogger);
+    }
+    @Test
+    void testGetAllNotCurrentUsers() {
+        String currentUsername = "currentUser";
+        Blogger currentUser = new Blogger();
+        currentUser.setId(1L);
+        currentUser.setUserName(currentUsername);
+
+        Blogger otherUser1 = new Blogger();
+        otherUser1.setId(2L);
+        otherUser1.setUserName("user1");
+
+        Blogger otherUser2 = new Blogger();
+        otherUser2.setId(3L);
+        otherUser2.setUserName("user2");
+
+        List<Blogger> allBloggers = Arrays.asList(currentUser, otherUser1, otherUser2);
+        when(bloggerServiceImpl.findByUserName(currentUsername)).thenReturn(currentUser);
+        when(bloggerRepository.findAll()).thenReturn(allBloggers);
+        List<Blogger> notCurrentUsers = bloggerServiceImpl.getAllNotCurrentUsers(currentUsername);
+        assertEquals(2, notCurrentUsers.size());
+        assertFalse(notCurrentUsers.contains(currentUser));
     }
 }
