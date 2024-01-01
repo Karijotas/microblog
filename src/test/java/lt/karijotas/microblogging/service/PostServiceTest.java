@@ -3,21 +3,25 @@ package lt.karijotas.microblogging.service;
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.model.Blogger;
+import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
+import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 public class PostServiceTest {
 
@@ -110,4 +114,51 @@ public class PostServiceTest {
         assertThat(mostUsed.keySet()).containsExactlyInAnyOrderElementsOf(Arrays.asList("test", "a", "post"));
     }
 
+    @Test
+    void getAllPosts_ReturnsAllPosts() {
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post());
+        posts.add(new Post());
+        when(postRepository.findAll()).thenReturn(posts);
+        List<Post> found = postService.getAll();
+        assertEquals(2, found.size());
+    }
+
+    @Test
+    void deleteById_DeletesSuccessfully() {
+        doNothing().when(postRepository).deleteById(anyLong());
+        boolean deleted = postService.deleteById(1L);
+        assertTrue(deleted);
+    }
+
+    @Test
+    void deleteById_FailsToDelete() {
+        doThrow(EmptyResultDataAccessException.class).when(postRepository).deleteById(anyLong());
+        boolean deleted = postService.deleteById(1L);
+        assertFalse(deleted);
+    }
+
+    @Test
+    void findById_FindsSuccessfully() {
+        Post post = new Post();
+        post.setId(1L);
+        when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
+        Post found = postService.getById(1L).get();
+        assertEquals(found, post);
+    }
+
+    @Test
+    void getAllByAuthorId_FindsSuccessfully() {
+        Blogger blogger = new Blogger();
+        blogger.setId(1L);
+        blogger.setUserName("John Doe");
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post());
+        posts.add(new Post());
+        when(postRepository.findAllByBloggerId(1L)).thenReturn(posts);
+        PostService postServiceSpy = spy(postService);
+        List<Post> retrievedPosts = postServiceSpy.getAllByAuthor(1L);
+        verify(postServiceSpy, times(posts.size())).increaseViewCount(any(Post.class));
+        assertEquals(posts, retrievedPosts);
+    }
 }

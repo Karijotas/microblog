@@ -1,11 +1,13 @@
 package lt.karijotas.microblogging.api;
-import lt.karijotas.microblogging.api.PostController;
+
+import lt.karijotas.microblogging.dao.CommentRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
+import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
-import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
+import lt.karijotas.microblogging.service.CommentService;
 import lt.karijotas.microblogging.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-import static lt.karijotas.microblogging.model.mapper.PostMapper.*;
+import static lt.karijotas.microblogging.model.mapper.PostMapper.toPostEntityDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.*;
@@ -28,11 +30,14 @@ class PostControllerTest {
 
     @Mock
     private PostService postService;
-
     @Mock
     private BloggerService bloggerService;
     @Mock
+    private CommentService commentService;
+    @Mock
     private Blogger blogger;
+    @Mock
+    private CommentRepository commentRepository;
     @InjectMocks
     private PostController postController;
 
@@ -112,6 +117,7 @@ class PostControllerTest {
         mockPost.setBlogger(blogger);
         when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
     }
+
     @Test
     void testCreatePost() {
         Blogger blogger = new Blogger();
@@ -129,22 +135,24 @@ class PostControllerTest {
     }
 
 
-//    @Test
-//    void deletePost_PostExists_ReturnsNoContent() {
-//        Long postId = 1L;
-//        UserDetails userDetails = mock(UserDetails.class);
-//        when(userDetails.getUsername()).thenReturn("username");
-//
-//        Blogger blogger = mock(Blogger.class);
-//        when(bloggerService.findByUserName(anyString())).thenReturn(blogger);
-//        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
-//        when(postService.deleteById(postId)).thenReturn(true);
-//
-//        ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
-//        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-//        verify(postService).deleteById(postId);
-//        verify(bloggerService).findByUserName("username");
-//    }
+    @Test
+    void deletePost_PostExists_ReturnsNoContent() {
+        Long postId = 1L;
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn("username");
+        Blogger blogger = mock(Blogger.class);
+        when(bloggerService.findByUserName(anyString())).thenReturn(blogger);
+        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
+        when(postService.deleteById(postId)).thenReturn(true);
+        Comment comment = mock(Comment.class);
+        List<Comment> comments = new ArrayList<>();
+        comments.add(comment);
+        when(commentService.getAllByPostId(postId)).thenReturn(comments);
+        ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        verify(postService).deleteById(postId);
+        verify(bloggerService).findByUserName("username");
+    }
 
 
     @Test
@@ -164,5 +172,61 @@ class PostControllerTest {
 
         ResponseEntity<PostDto> responseEntity = postController.updatePost(postId, postDto, userDetails);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void testGetAllByCurrentUser_UserAuthenticated_ReturnsPosts() {
+        UserDetails userDetails = mock(UserDetails.class);
+        when(userDetails.getUsername()).thenReturn("testUser");
+        Blogger blogger = new Blogger();
+        blogger.setId(1L);
+        when(bloggerService.findByUserName("testUser")).thenReturn(blogger);
+
+        List<Post> mockPosts = Arrays.asList(new Post(), new Post());
+        when(postService.getAllByCurrentAuthor(anyLong())).thenReturn(mockPosts);
+
+        ResponseEntity<List<Post>> response = postController.getAllByCurrentUser(userDetails);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(mockPosts, response.getBody());
+    }
+
+    @Test
+    void testGetPost_PostExists_ReturnsPost() {
+        Long postId = 1L;
+        Post mockPost = new Post();
+        mockPost.setId(postId);
+        when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
+
+        Post retrievedPost = postController.getPost(postId);
+
+        assertEquals(mockPost, retrievedPost);
+    }
+
+    @Test
+    void testGetPost_PostDoesNotExist_ThrowsException() {
+        Long postId = 1L;
+        when(postService.getById(postId)).thenReturn(Optional.empty());
+
+        try {
+            postController.getPost(postId);
+        } catch (BlogValidationExeption exception) {
+            assertEquals("Post doesn't exist", exception.getMessage());
+            assertEquals("id", exception.getField());
+            assertEquals("Post doesn't exist", exception.getError());
+            assertEquals(postId.toString(), exception.getRejectedValue());
+        }
+    }
+
+    @Test
+    void testGetAllByUserId_ReturnsPostsByUserId() {
+        Long userId = 1L;
+
+        List<Post> mockPosts = Arrays.asList(new Post(), new Post());
+        when(postService.getAllByAuthor(userId)).thenReturn(mockPosts);
+
+        List<Post> posts = postController.getAllByUserId(userId);
+
+        assertEquals(mockPosts, posts);
     }
 }

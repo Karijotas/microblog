@@ -3,21 +3,30 @@ import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
+import lt.karijotas.microblogging.model.Comment;
+import lt.karijotas.microblogging.model.Post;
+import lt.karijotas.microblogging.model.dto.BloggerEntityDto;
+import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 public class BloggerServiceTest {
 
@@ -84,5 +93,37 @@ public class BloggerServiceTest {
         assertThat(foundBlogger.getId()).isEqualTo(1L);
         assertThat(foundBlogger.getUserName()).isEqualTo("JohnDoe");
         assertThat(foundBlogger.getPassword()).isEqualTo("password");
+    }
+
+
+    @Test
+    void getAllBloggers_ReturnsAll() {
+        List<Blogger> bloggers = new ArrayList<>();
+        bloggers.add(new Blogger());
+        bloggers.add(new Blogger());
+        when(bloggerRepository.findAll()).thenReturn(bloggers);
+        List<Blogger> found = bloggerService.getAll();
+        assertEquals(2, found.size());
+    }
+
+    @Test
+    void deleteById_DeletesSuccessfully() {
+        doNothing().when(bloggerRepository).deleteById(anyLong());
+        boolean deleted = bloggerService.deleteById(1L);
+        assertTrue(deleted);
+    }
+    @Test
+    void deleteBloggerById_FailsToDeleteBlogger() {
+        doThrow(EmptyResultDataAccessException.class).when(bloggerRepository).deleteById(anyLong());
+        boolean deleted = bloggerService.deleteById(1L);
+        assertFalse(deleted);
+    }
+    @Test
+    void findBloggerById_FindsBloggerSuccessfully(){
+        Blogger blogger = new Blogger();
+        blogger.setId(1L);
+        when(bloggerRepository.findById(blogger.getId())).thenReturn(Optional.of(blogger));
+        Blogger found = bloggerService.getById(1L).get();
+        assertEquals(found, blogger);
     }
 }

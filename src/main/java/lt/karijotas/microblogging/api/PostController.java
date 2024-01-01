@@ -69,7 +69,6 @@ public class PostController {
     public Post getPost(@PathVariable Long postId) {
         var postOptional = postService.getById(postId).orElseThrow(
                 () -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
-        logger.info("Returning a single post");
         return postOptional;
     }
 

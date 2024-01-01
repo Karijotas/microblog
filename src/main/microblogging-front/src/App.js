@@ -1,7 +1,6 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { HashRouter, Route, Routes } from 'react-router-dom';
-import { Counter } from './Pages/Counter';
 import { Feed } from './Pages/Home';
 import { Register } from './Pages/Register';
 import { Create } from './Pages/Create';
@@ -12,7 +11,7 @@ import { SinglePost } from './Pages/SinglePost';
 function App() {
   return (
     <div>
-      <Counter />
+      {/*<Counter />*/}
       <HashRouter >
         <Routes>
           <Route path='/' element={<Feed />} />

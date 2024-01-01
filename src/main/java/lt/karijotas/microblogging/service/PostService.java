@@ -98,7 +98,7 @@ public class PostService extends GenericService {
         return posts;
     }
 
-    private void increaseViewCount(Post post) {
+    public void increaseViewCount(Post post) {
         if (post.getCount() == null) {
             post.setCount(1);
         } else {

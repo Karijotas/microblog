@@ -21,12 +21,9 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/comment")
 public class CommentController {
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);
-
-    private final PostService postService;
     private final CommentService commentService;
 
-    public CommentController(PostService postService, CommentService commentService) {
-        this.postService = postService;
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
 
