@@ -6,9 +6,9 @@ import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
-import lt.karijotas.microblogging.service.BloggerService;
-import lt.karijotas.microblogging.service.CommentService;
-import lt.karijotas.microblogging.service.PostService;
+import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
+import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
+import lt.karijotas.microblogging.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,11 +29,11 @@ import static org.mockito.Mockito.*;
 class PostControllerTest {
 
     @Mock
-    private PostService postService;
+    private PostServiceImpl postServiceImpl;
     @Mock
-    private BloggerService bloggerService;
+    private BloggerServiceImpl BloggerServiceImpl;
     @Mock
-    private CommentService commentService;
+    private CommentServiceImpl commentServiceImpl;
     @Mock
     private Blogger blogger;
     @Mock
@@ -52,8 +52,8 @@ class PostControllerTest {
         Post mockPost = new Post();
         mockPost.setId(postId);
 
-        when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
-        when(postService.wordCount(any(Post.class))).thenReturn(10);
+        when(postServiceImpl.getById(postId)).thenReturn(Optional.of(mockPost));
+        when(postServiceImpl.wordCount(any(Post.class))).thenReturn(10);
 
         ResponseEntity<Integer> responseEntity = postController.getPostWordCount(postId);
 
@@ -65,7 +65,7 @@ class PostControllerTest {
     void getPostWordCount_PostDoesNotExist_ThrowsException() {
         Long postId = 1L;
 
-        when(postService.getById(postId)).thenReturn(Optional.empty());
+        when(postServiceImpl.getById(postId)).thenReturn(Optional.empty());
 
         try {
             postController.getPostWordCount(postId);
@@ -89,8 +89,8 @@ class PostControllerTest {
         mockMostUsedWords.put("word1", 10L);
         mockMostUsedWords.put("word2", 8L);
 
-        when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
-        when(postService.mostUsedWords(any(Post.class), eq(limit))).thenReturn(mockMostUsedWords);
+        when(postServiceImpl.getById(postId)).thenReturn(Optional.of(mockPost));
+        when(postServiceImpl.mostUsedWords(any(Post.class), eq(limit))).thenReturn(mockMostUsedWords);
 
         ResponseEntity<Map<String, Long>> responseEntity = postController.mostUsedWords(postId, limit);
 
@@ -102,7 +102,7 @@ class PostControllerTest {
     void getAll_ReturnsAllPosts() {
         List<Post> mockPosts = Collections.singletonList(new Post());
 
-        when(postService.getAll()).thenReturn(mockPosts);
+        when(postServiceImpl.getAll()).thenReturn(mockPosts);
 
         List<Post> posts = postController.getAll();
 
@@ -115,7 +115,7 @@ class PostControllerTest {
         Post mockPost = new Post();
         mockPost.setId(postId);
         mockPost.setBlogger(blogger);
-        when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
+        when(postServiceImpl.getById(postId)).thenReturn(Optional.of(mockPost));
     }
 
     @Test
@@ -129,8 +129,8 @@ class PostControllerTest {
         post.setBody("This is a test post content.");
         post.setBlogger(blogger);
 
-        when(postService.create(toPostEntityDto(post))).thenReturn(post);
-        Post createdPost = postService.create(toPostEntityDto(post));
+        when(postServiceImpl.create(toPostEntityDto(post))).thenReturn(post);
+        Post createdPost = postServiceImpl.create(toPostEntityDto(post));
         assertNotNull(createdPost);
     }
 
@@ -141,17 +141,17 @@ class PostControllerTest {
         UserDetails userDetails = mock(UserDetails.class);
         when(userDetails.getUsername()).thenReturn("username");
         Blogger blogger = mock(Blogger.class);
-        when(bloggerService.findByUserName(anyString())).thenReturn(blogger);
-        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
-        when(postService.deleteById(postId)).thenReturn(true);
+        when(BloggerServiceImpl.findByUserName(anyString())).thenReturn(blogger);
+        when(postServiceImpl.validateOwnership(anyLong(), anyLong())).thenReturn(true);
+        when(postServiceImpl.deleteById(postId)).thenReturn(true);
         Comment comment = mock(Comment.class);
         List<Comment> comments = new ArrayList<>();
         comments.add(comment);
-        when(commentService.getAllByPostId(postId)).thenReturn(comments);
+        when(commentServiceImpl.getAllByPostId(postId)).thenReturn(comments);
         ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-        verify(postService).deleteById(postId);
-        verify(bloggerService).findByUserName("username");
+        verify(postServiceImpl).deleteById(postId);
+        verify(BloggerServiceImpl).findByUserName("username");
     }
 
 
@@ -163,12 +163,12 @@ class PostControllerTest {
         when(userDetails.getUsername()).thenReturn("username");
 
         Post updatedPost = new Post();
-        when(postService.update(any(Post.class), eq(postId))).thenReturn(updatedPost);
+        when(postServiceImpl.update(any(Post.class), eq(postId))).thenReturn(updatedPost);
         Blogger mockedBlogger = mock(Blogger.class);
         when(mockedBlogger.getId()).thenReturn(1L);
-        when(bloggerService.findByUserName(anyString())).thenReturn(mockedBlogger);
-        when(postService.validateOwnership(anyLong(), anyLong())).thenReturn(true);
-        when(postService.update(any(Post.class), anyLong())).thenReturn(updatedPost);
+        when(BloggerServiceImpl.findByUserName(anyString())).thenReturn(mockedBlogger);
+        when(postServiceImpl.validateOwnership(anyLong(), anyLong())).thenReturn(true);
+        when(postServiceImpl.update(any(Post.class), anyLong())).thenReturn(updatedPost);
 
         ResponseEntity<PostDto> responseEntity = postController.updatePost(postId, postDto, userDetails);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -180,10 +180,10 @@ class PostControllerTest {
         when(userDetails.getUsername()).thenReturn("testUser");
         Blogger blogger = new Blogger();
         blogger.setId(1L);
-        when(bloggerService.findByUserName("testUser")).thenReturn(blogger);
+        when(BloggerServiceImpl.findByUserName("testUser")).thenReturn(blogger);
 
         List<Post> mockPosts = Arrays.asList(new Post(), new Post());
-        when(postService.getAllByCurrentAuthor(anyLong())).thenReturn(mockPosts);
+        when(postServiceImpl.getAllByCurrentAuthor(anyLong())).thenReturn(mockPosts);
 
         ResponseEntity<List<Post>> response = postController.getAllByCurrentUser(userDetails);
 
@@ -196,7 +196,7 @@ class PostControllerTest {
         Long postId = 1L;
         Post mockPost = new Post();
         mockPost.setId(postId);
-        when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
+        when(postServiceImpl.getById(postId)).thenReturn(Optional.of(mockPost));
 
         Post retrievedPost = postController.getPost(postId);
 
@@ -206,7 +206,7 @@ class PostControllerTest {
     @Test
     void testGetPost_PostDoesNotExist_ThrowsException() {
         Long postId = 1L;
-        when(postService.getById(postId)).thenReturn(Optional.empty());
+        when(postServiceImpl.getById(postId)).thenReturn(Optional.empty());
 
         try {
             postController.getPost(postId);
@@ -223,7 +223,7 @@ class PostControllerTest {
         Long userId = 1L;
 
         List<Post> mockPosts = Arrays.asList(new Post(), new Post());
-        when(postService.getAllByAuthor(userId)).thenReturn(mockPosts);
+        when(postServiceImpl.getAllByAuthor(userId)).thenReturn(mockPosts);
 
         List<Post> posts = postController.getAllByUserId(userId);
 

@@ -1,4 +1,4 @@
-package lt.karijotas.microblogging.service;
+package lt.karijotas.microblogging.service.impl;
 
 import lt.karijotas.microblogging.dao.CommentRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
@@ -6,6 +6,7 @@ import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
+import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,14 +24,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class CommentServiceTest {
+public class CommentServiceImplTest {
 
     @Mock
     private CommentRepository commentRepository;
     @Mock
     private PostRepository postRepository;
     @InjectMocks
-    private CommentService commentService;
+    private CommentServiceImpl commentServiceImpl;
 
     @BeforeEach
     void setup() {
@@ -59,7 +60,7 @@ public class CommentServiceTest {
 
         when(postRepository.getById(1L)).thenReturn(post);
         when(commentRepository.save(any(Comment.class))).thenReturn(comment);
-        Comment saved = commentService.create(commentEntityDto);
+        Comment saved = commentServiceImpl.create(commentEntityDto);
         assertThat(saved).isNotNull();
         assertThat(saved.getId()).isEqualTo(commentEntityDto.getId());
         assertThat(saved.getContent()).isEqualTo(commentEntityDto.getContent());
@@ -72,20 +73,20 @@ public class CommentServiceTest {
         comments.add(new Comment(1L, "Comment 1", new Post()));
         comments.add(new Comment(2L, "Comment 2", new Post()));
         when(commentRepository.findAll()).thenReturn(comments);
-        List<CommentEntityDto> found = commentService.getAll();
+        List<CommentEntityDto> found = commentServiceImpl.getAll();
         assertEquals(2, found.size());
     }
 
     @Test
     void deleteCommentById_DeletesCommentSuccessfully() {
         doNothing().when(commentRepository).deleteById(anyLong());
-        boolean deleted = commentService.deleteById(1L);
+        boolean deleted = commentServiceImpl.deleteById(1L);
         assertTrue(deleted);
     }
     @Test
     void deleteCommentById_FailsToDeleteComment() {
         doThrow(EmptyResultDataAccessException.class).when(commentRepository).deleteById(anyLong());
-        boolean deleted = commentService.deleteById(1L);
+        boolean deleted = commentServiceImpl.deleteById(1L);
         assertFalse(deleted);
     }
     @Test
@@ -93,7 +94,7 @@ public class CommentServiceTest {
         Comment comment = new Comment();
         comment.setId(1L);
         when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
-        Comment found = commentService.getById(1L).get();
+        Comment found = commentServiceImpl.getById(1L).get();
         assertEquals(found, comment);
     }
 }

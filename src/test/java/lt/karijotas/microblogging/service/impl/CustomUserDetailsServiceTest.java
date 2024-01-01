@@ -1,8 +1,9 @@
-package lt.karijotas.microblogging.service;
+package lt.karijotas.microblogging.service.impl;
 
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
+import lt.karijotas.microblogging.service.CustomUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -2,7 +2,7 @@ package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
-import lt.karijotas.microblogging.service.CommentService;
+import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class CommentControllerTest {
     @Mock
-    private CommentService commentService;
+    private CommentServiceImpl commentServiceImpl;
 
     @InjectMocks
     private CommentController commentController;
@@ -30,7 +30,7 @@ public class CommentControllerTest {
     @Test
     void getAll_ReturnsAllComments() {
         List<CommentEntityDto> mockComments = Collections.singletonList(new CommentEntityDto());
-        when(commentService.getAll()).thenReturn(mockComments);
+        when(commentServiceImpl.getAll()).thenReturn(mockComments);
         List<CommentEntityDto> comments = commentController.getAll();
         assertEquals(mockComments, comments);
     }
@@ -39,7 +39,7 @@ public class CommentControllerTest {
     void getAllByPostId_ReturnsCommentsForPostId() {
         Long postId = 1L;
         List<Comment> mockComments = Collections.singletonList(new Comment());
-        when(commentService.getAllByPostId(postId)).thenReturn(mockComments);
+        when(commentServiceImpl.getAllByPostId(postId)).thenReturn(mockComments);
         List<Comment> comments = commentController.getAllByPostId(postId);
         assertEquals(mockComments, comments);
     }
@@ -47,10 +47,10 @@ public class CommentControllerTest {
     @Test
     void deleteComment_ValidId_ReturnsNoContent() {
         Long commentId = 1L;
-        when(commentService.deleteById(commentId)).thenReturn(true);
+        when(commentServiceImpl.deleteById(commentId)).thenReturn(true);
         ResponseEntity<Void> responseEntity = commentController.deleteComment(commentId);
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
-        verify(commentService, times(1)).deleteById(anyLong());
+        verify(commentServiceImpl, times(1)).deleteById(anyLong());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class CommentControllerTest {
         Comment commentOne = new Comment();
         Comment commentTwo = new Comment();
         List<Comment> comments = List.of(commentOne, commentTwo);
-        when(commentService.getAllByPostId(postId)).thenReturn(comments);
+        when(commentServiceImpl.getAllByPostId(postId)).thenReturn(comments);
         Integer commentCount = commentController.getCommentCountByPostId(postId);
 
         assertEquals(commentCount, comments.size());

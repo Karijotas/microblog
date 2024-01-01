@@ -1,12 +1,11 @@
-package lt.karijotas.microblogging.service;
+package lt.karijotas.microblogging.service.impl;
 
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.model.Blogger;
-import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
-import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
+import lt.karijotas.microblogging.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,14 +15,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class PostServiceTest {
+public class PostServiceImplTest {
 
     @Mock
     private BloggerRepository bloggerRepository;
@@ -32,7 +30,7 @@ public class PostServiceTest {
     private PostRepository postRepository;
 
     @InjectMocks
-    private PostService postService;
+    private PostServiceImpl postServiceImpl;
 
     @BeforeEach
     void setup() {
@@ -58,7 +56,7 @@ public class PostServiceTest {
         createdPost.setBlogger(blogger);
         when(bloggerRepository.getById(1L)).thenReturn(blogger);
         when(postRepository.save(any(Post.class))).thenReturn(createdPost);
-        Post savedPost = postService.create(postEntityDto);
+        Post savedPost = postServiceImpl.create(postEntityDto);
         assertThat(savedPost).isNotNull();
         assertThat(savedPost.getId()).isEqualTo(1L);
         assertThat(savedPost.getName()).isEqualTo(postEntityDto.getName());
@@ -79,7 +77,7 @@ public class PostServiceTest {
         Post updatedPost = new Post();
         updatedPost.setName("Updated Post");
         updatedPost.setBody("This is an updated post body");
-        Post updated = postService.update(updatedPost, 1L);
+        Post updated = postServiceImpl.update(updatedPost, 1L);
         assertThat(updated).isNotNull();
         assertThat(updated.getId()).isEqualTo(existingPost.getId());
         assertThat(updated.getName()).isEqualTo(updatedPost.getName());
@@ -90,7 +88,7 @@ public class PostServiceTest {
     void splitPost_validPost_ReturnsArrayOfWords() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words.");
-        String[] words = postService.splitPost(post);
+        String[] words = postServiceImpl.splitPost(post);
         assertThat(words).isNotNull();
         assertThat(words).containsExactly("this", "is", "a", "test", "post", "it", "has", "some", "words");
     }
@@ -99,7 +97,7 @@ public class PostServiceTest {
     void wordCount_validPost_ReturnsWordCount() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words.");
-        int count = postService.wordCount(post);
+        int count = postServiceImpl.wordCount(post);
         assertThat(count).isEqualTo(9);
     }
 
@@ -107,8 +105,8 @@ public class PostServiceTest {
     void mostUsedWords_validPostAndLimit_ReturnsMostUsedWords() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words. This is a test post for testing.");
-        when(postService.splitPost(post)).thenReturn(new String[]{"this", "is", "a", "test", "post", "it", "has", "some", "words", "this", "is", "a", "test", "post", "for", "testing"});
-        Map<String, Long> mostUsed = postService.mostUsedWords(post, 3L);
+        when(postServiceImpl.splitPost(post)).thenReturn(new String[]{"this", "is", "a", "test", "post", "it", "has", "some", "words", "this", "is", "a", "test", "post", "for", "testing"});
+        Map<String, Long> mostUsed = postServiceImpl.mostUsedWords(post, 3L);
         assertThat(mostUsed).isNotNull();
         assertThat(mostUsed.size()).isLessThanOrEqualTo(3);
         assertThat(mostUsed.keySet()).containsExactlyInAnyOrderElementsOf(Arrays.asList("test", "a", "post"));
@@ -120,21 +118,21 @@ public class PostServiceTest {
         posts.add(new Post());
         posts.add(new Post());
         when(postRepository.findAll()).thenReturn(posts);
-        List<Post> found = postService.getAll();
+        List<Post> found = postServiceImpl.getAll();
         assertEquals(2, found.size());
     }
 
     @Test
     void deleteById_DeletesSuccessfully() {
         doNothing().when(postRepository).deleteById(anyLong());
-        boolean deleted = postService.deleteById(1L);
+        boolean deleted = postServiceImpl.deleteById(1L);
         assertTrue(deleted);
     }
 
     @Test
     void deleteById_FailsToDelete() {
         doThrow(EmptyResultDataAccessException.class).when(postRepository).deleteById(anyLong());
-        boolean deleted = postService.deleteById(1L);
+        boolean deleted = postServiceImpl.deleteById(1L);
         assertFalse(deleted);
     }
 
@@ -143,7 +141,7 @@ public class PostServiceTest {
         Post post = new Post();
         post.setId(1L);
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
-        Post found = postService.getById(1L).get();
+        Post found = postServiceImpl.getById(1L).get();
         assertEquals(found, post);
     }
 
@@ -156,9 +154,9 @@ public class PostServiceTest {
         posts.add(new Post());
         posts.add(new Post());
         when(postRepository.findAllByBloggerId(1L)).thenReturn(posts);
-        PostService postServiceSpy = spy(postService);
-        List<Post> retrievedPosts = postServiceSpy.getAllByAuthor(1L);
-        verify(postServiceSpy, times(posts.size())).increaseViewCount(any(Post.class));
+        PostServiceImpl postServiceImplSpy = spy(postServiceImpl);
+        List<Post> retrievedPosts = postServiceImplSpy.getAllByAuthor(1L);
+        verify(postServiceImplSpy, times(posts.size())).increaseViewCount(any(Post.class));
         assertEquals(posts, retrievedPosts);
     }
 }

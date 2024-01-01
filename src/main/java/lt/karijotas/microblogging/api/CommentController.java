@@ -2,8 +2,7 @@ package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
-import lt.karijotas.microblogging.service.CommentService;
-import lt.karijotas.microblogging.service.PostService;
+import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,39 +20,39 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/comment")
 public class CommentController {
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);
-    private final CommentService commentService;
+    private final CommentServiceImpl commentServiceImpl;
 
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
+    public CommentController(CommentServiceImpl commentServiceImpl) {
+        this.commentServiceImpl = commentServiceImpl;
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<CommentEntityDto> getAll() {
-        return commentService.getAll();
+        return commentServiceImpl.getAll();
     }
 
     @GetMapping(value = "/post/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Comment> getAllByPostId(@PathVariable Long postId) {
-        return commentService.getAllByPostId(postId);
+        return commentServiceImpl.getAllByPostId(postId);
     }
     @GetMapping(value = "/count/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public Integer getCommentCountByPostId(@PathVariable Long postId) {
-        return commentService.getAllByPostId(postId).size();
+        return commentServiceImpl.getAllByPostId(postId).size();
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<CommentEntityDto> create(@Valid @RequestBody CommentEntityDto commentEntityDto) {
-        var createdComment = commentService.create(commentEntityDto);
+        var createdComment = commentServiceImpl.create(commentEntityDto);
         return ok(toCommentEntityDto(createdComment));
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         logger.info("Attempt to delete Comment by id: {}", commentId);
-        boolean deleted = commentService.deleteById(commentId);
-        return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+        boolean deleted = commentServiceImpl.deleteById(commentId);
+        return (deleted ? ResponseEntity.noContent() : ResponseEntity.notFound()).build();
     }
 }

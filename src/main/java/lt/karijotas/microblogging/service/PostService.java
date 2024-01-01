@@ -1,128 +1,36 @@
 package lt.karijotas.microblogging.service;
 
-import lt.karijotas.microblogging.dao.BloggerRepository;
-import lt.karijotas.microblogging.dao.PostRepository;
-import lt.karijotas.microblogging.exception.BlogValidationExeption;
-import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
+public interface PostService {
+    Boolean validateLength(Post post);
 
-@Service
-public class PostService extends GenericService {
-    private final BloggerRepository bloggerRepository;
-    private final PostRepository postRepository;
-    private final Logger logger = LoggerFactory.getLogger(PostService.class);
+    Post create(PostEntityDto post);
 
+    Post update(Post post, Long id);
 
-    @Autowired
-    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
-        this.bloggerRepository = bloggerRepository;
-        this.postRepository = postRepository;
-    }
+    String[] splitPost(Post post);
 
-    public Boolean validateLength(Post post) {
-        return !post.getBody().isEmpty() || !post.getName().isEmpty();
-    }
+    Integer wordCount(Post post);
 
-    public Post create(PostEntityDto post) {
-        Blogger blogger = bloggerRepository.getById(post.getBloggerId());
-        if (validateLength(toPost(post))) {
-            var newPost = new Post();
-            newPost.setId(post.getId());
-            newPost.setName(post.getName());
-            newPost.setBody(post.getBody());
-            newPost.setBlogger(blogger);
-            return postRepository.save(newPost);
-        }
-        throw new BlogValidationExeption("Post title and body shouldn't be empty");
-    }
+    Map<String, Long> mostUsedWords(Post post, Long limit);
 
-    public Post update(Post post, Long id) {
-        Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
-        logger.info(existingPost.getName() + post.getName());
-        existingPost.setName(post.getName());
-        existingPost.setBody(post.getBody());
-        return postRepository.save(existingPost);
-    }
+    List<Post> getAll();
 
-    public String[] splitPost(Post post) {
-        String text = post.getBody();
-        return text.replaceAll("[^\\p{L}\\p{Nd}]+", " ")
-                .toLowerCase()
-                .trim()
-                .split("\\s+");
-    }
+    List<Post> getAllByCurrentAuthor(Long id);
 
-    public Integer wordCount(Post post) {
-        return splitPost(post).length;
-    }
+    List<Post> getAllByAuthor(Long id);
 
-    public Map<String, Long> mostUsedWords(Post post, Long limit) {
-        String[] words = splitPost(post);
-        return Arrays.stream(words)
-                .collect(Collectors.groupingBy(
-                        word -> word,
-                        Collectors.counting()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(limit)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-    }
+    void increaseViewCount(Post post);
 
+    Boolean validateOwnership(Long userId, Long postId);
 
-    @Override
-    public List<Post> getAll() {
-        return postRepository.findAll();
+    Boolean deleteById(Long id);
 
-    }
-
-    public List<Post> getAllByCurrentAuthor(Long id) {
-        return postRepository.findAllByBloggerId(id);
-    }
-
-    public List<Post> getAllByAuthor(Long id) {
-        List<Post> posts = postRepository.findAllByBloggerId(id);
-        posts.forEach(this::increaseViewCount);
-        return posts;
-    }
-
-    public void increaseViewCount(Post post) {
-        if (post.getCount() == null) {
-            post.setCount(1);
-        } else {
-            post.setCount(post.getCount() + 1);
-        }
-        postRepository.save(post);
-    }
-
-    public Boolean validateOwnership(Long userId, Long postId) {
-        return postRepository.findById(postId).stream().anyMatch(post -> post.getBlogger().getId().equals(userId));
-    }
-
-    @Override
-    public Boolean deleteById(Long id) {
-        try {
-            postRepository.deleteById(id);
-            return true;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
-    }
-
-    @Override
-    public Optional<Post> getById(Long id) {
-        return postRepository.findById(id);
-    }
+    Optional<Post> getById(Long id);
 }

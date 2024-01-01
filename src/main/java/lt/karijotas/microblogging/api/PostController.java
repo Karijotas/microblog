@@ -6,9 +6,9 @@ import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import lt.karijotas.microblogging.service.BloggerService;
-import lt.karijotas.microblogging.service.CommentService;
-import lt.karijotas.microblogging.service.PostService;
+import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
+import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
+import lt.karijotas.microblogging.service.impl.PostServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -29,31 +29,31 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/post")
 public class PostController {
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
-    private final PostService postService;
-    private final BloggerService bloggerService;
-    private final CommentService commentService;
+    private final PostServiceImpl postServiceImpl;
+    private final BloggerServiceImpl BloggerServiceImpl;
+    private final CommentServiceImpl commentServiceImpl;
     private final CommentRepository commentRepository;
 
-    public PostController(PostService postService, BloggerService bloggerService, CommentService commentService,
+    public PostController(PostServiceImpl postServiceImpl, BloggerServiceImpl BloggerServiceImpl, CommentServiceImpl commentServiceImpl,
                           CommentRepository commentRepository) {
-        this.postService = postService;
-        this.bloggerService = bloggerService;
-        this.commentService = commentService;
+        this.postServiceImpl = postServiceImpl;
+        this.BloggerServiceImpl = BloggerServiceImpl;
+        this.commentServiceImpl = commentServiceImpl;
         this.commentRepository = commentRepository;
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Post> getAll() {
-        return postService.getAll();
+        return postServiceImpl.getAll();
     }
 
     @GetMapping(value = "/user", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<List<Post>> getAllByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
-            Long id = bloggerService.findByUserName(username).getId();
-            return ResponseEntity.ok(postService.getAllByCurrentAuthor(id));
+            Long id = BloggerServiceImpl.findByUserName(username).getId();
+            return ResponseEntity.ok(postServiceImpl.getAllByCurrentAuthor(id));
         }
         return null;
     }
@@ -61,39 +61,35 @@ public class PostController {
     @GetMapping(value = "/user/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public List<Post> getAllByUserId(@PathVariable Long userId) {
-        return postService.getAllByAuthor(userId);
+        return postServiceImpl.getAllByAuthor(userId);
     }
 
     @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
     public Post getPost(@PathVariable Long postId) {
-        var postOptional = postService.getById(postId).orElseThrow(
+        var postOptional = postServiceImpl.getById(postId).orElseThrow(
                 () -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
         return postOptional;
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<PostEntityDto> create(@Valid @RequestBody PostEntityDto postEntityDto) {
-        var createdPost = postService.create(postEntityDto);
+        var createdPost = postServiceImpl.create(postEntityDto);
         return ok(toPostEntityDto(createdPost));
     }
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            Long id = bloggerService.findByUserName(userDetails.getUsername()).getId();
-            if (postService.validateOwnership(id, postId)) {
+            Long id = BloggerServiceImpl.findByUserName(userDetails.getUsername()).getId();
+            if (postServiceImpl.validateOwnership(id, postId)) {
                 logger.info("Attempt to delete Post by id: {}", postId);
-                List<Comment> comments = commentService.getAllByPostId(postId);
+                List<Comment> comments = commentServiceImpl.getAllByPostId(postId);
                 logger.info("Deleting {} comments from the post", comments.size());
                 commentRepository.deleteAll(comments);
                 comments.clear();
-                boolean deleted = postService.deleteById(postId);
-                if (deleted) {
-                    return ResponseEntity.noContent().build();
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
+                boolean deleted = postServiceImpl.deleteById(postId);
+                return (deleted ? ResponseEntity.noContent() : ResponseEntity.notFound()).build();
             }
         }
         return ResponseEntity.notFound().build();
@@ -102,11 +98,9 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<PostDto> updatePost(@PathVariable Long postId, @Valid @RequestBody PostDto postDto, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            Long id = bloggerService.findByUserName(userDetails.getUsername()).getId();
-            if (postService.validateOwnership(id, postId)) {
-                var updated = postService.update(toPost(postDto), postId);
-                logger.info(updated.getName());
-                logger.info(String.valueOf(ok(toPostDto(updated))));
+            Long id = BloggerServiceImpl.findByUserName(userDetails.getUsername()).getId();
+            if (postServiceImpl.validateOwnership(id, postId)) {
+                var updated = postServiceImpl.update(toPost(postDto), postId);
                 return ok(toPostDto(updated));
             }
         }
@@ -115,18 +109,18 @@ public class PostController {
 
     @GetMapping(value = "/{postId}/wordcount", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> getPostWordCount(@PathVariable Long postId) {
-        Post post = postService.getById(postId)
+        Post post = postServiceImpl.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
-        Integer wordCount = postService.wordCount(post);
+        Integer wordCount = postServiceImpl.wordCount(post);
         return ResponseEntity.ok().body(wordCount);
     }
 
 
     @GetMapping(value = "/{postId}/wordcount/{limit}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Map<String, Long>> mostUsedWords(@PathVariable Long postId, @PathVariable Long limit) {
-        Post post = postService.getById(postId)
+        Post post = postServiceImpl.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
-        Map<String, Long> mostUsedWords = postService.mostUsedWords(post, limit);
+        Map<String, Long> mostUsedWords = postServiceImpl.mostUsedWords(post, limit);
         return ResponseEntity.ok().body(mostUsedWords);
     }
 }

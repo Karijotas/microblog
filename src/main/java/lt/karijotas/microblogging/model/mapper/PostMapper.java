@@ -4,18 +4,18 @@ import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import lt.karijotas.microblogging.service.BloggerService;
+import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PostMapper {
 
-    private final BloggerService bloggerService;
+    private final BloggerServiceImpl BloggerServiceImpl;
     private static final Logger logger = LoggerFactory.getLogger(PostMapper.class);
 
 
-    public PostMapper(BloggerService bloggerService) {
-        this.bloggerService = bloggerService;
+    public PostMapper(BloggerServiceImpl BloggerServiceImpl) {
+        this.BloggerServiceImpl = BloggerServiceImpl;
     }
 
     public static PostEntityDto toPostEntityDto(Post post) {
@@ -32,7 +32,7 @@ public class PostMapper {
         post.setId(entityDto.getId());
         post.setName(entityDto.getName());
         post.setBody(entityDto.getBody());
-        post.setBlogger(bloggerService.getById(entityDto.getId()).orElseThrow(
+        post.setBlogger(BloggerServiceImpl.getById(entityDto.getId()).orElseThrow(
                 () -> new BlogValidationExeption("blogger doesn't exist", "id", "blogger doesn't exist", entityDto.getId().toString())));
         return post;
     }

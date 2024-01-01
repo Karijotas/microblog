@@ -38,7 +38,8 @@ public class ApiExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorDto> handleDataAccessException(HttpServletRequest request, DataAccessException dataAccessException) {
         logger.error("DataAccessException: {}. Cause?: {}",
-                dataAccessException.getMessage(), dataAccessException.getMostSpecificCause().getMessage());
+                dataAccessException.getMessage(),
+                dataAccessException.getMostSpecificCause().getMessage());
 
         var errorStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         var errorFields = List.of(
@@ -61,7 +62,9 @@ public class ApiExceptionHandler {
         var errorStatus = HttpStatus.BAD_REQUEST;
 
         var errorFields = List.of(
-                new ErrorFieldDto(blogValidationExeption.getField(), blogValidationExeption.getError(), blogValidationExeption.getRejectedValue())
+                new ErrorFieldDto(blogValidationExeption.getField(),
+                        blogValidationExeption.getError(),
+                        blogValidationExeption.getRejectedValue())
         );
 
         var errorDto = new ErrorDto(request.getRequestURL().toString(),
