@@ -1,11 +1,14 @@
 package lt.karijotas.microblogging.service;
 
+import lt.karijotas.microblogging.api.PostController;
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,8 @@ import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
 public class PostService extends GenericService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
+    private final Logger logger = LoggerFactory.getLogger(PostService.class);
+
 
     @Autowired
     public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
@@ -45,6 +50,7 @@ public class PostService extends GenericService {
 
     public Post update(Post post, Long id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
+      logger.info(existingPost.getName()+ post.getName());
         existingPost.setName(post.getName());
         existingPost.setBody(post.getBody());
         return postRepository.save(existingPost);

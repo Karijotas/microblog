@@ -11,6 +11,7 @@ export function Feed() {
     const [commonWords, setCommonWords] = useState(new Map());
     const [currentUser, setCurrentUser] = useState("");
     const [others, setOthers] = useState([]);
+    const [comments, setComments] = useState(null);
 
 
     useEffect(() => {
@@ -116,6 +117,15 @@ export function Feed() {
         }
     };
 
+    const fetchCommentCount = (id) => {
+        fetch(`/comment/count/` + id)
+            .then((response) => response.text())
+            .then((textResponse) => setComments(textResponse))
+            .catch((error) => {
+                console.error("Error fetching commentCount:", error);
+            });
+    };
+
     const handleLogout = () => {
         window.location.href = "http://localhost:8080/logout"
     };
@@ -126,24 +136,26 @@ export function Feed() {
         window.location.href = "#/post"
     };
     return (
-        <main className="text-center"> <div className="d-flex flex-column align-items-start">
-            <ListGroup className="w-20">
-                {others.map((other) => (
-                    <ListGroup.Item
-                        key={other.id}
-                        action
-                        as={Link}
-                        to={`/user/${other.id}`}
-                        variant="primary"
-                    >
-                        {other.userName}
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
-        </div>
-            <h1>BLOG</h1>
-            <h6>{currentUser ? "Current user is: " + currentUser : ''}</h6>
+        <main className="text-center">
 
+            <h1>BLOG</h1>
+
+            <h6>{currentUser ? "Current user is: " + currentUser : ''}</h6>
+            <div className="d-flex flex-column align-items-start">
+                <ListGroup className="w-20">
+                    {others.map((other) => (
+                        <ListGroup.Item
+                            key={other.id}
+                            action
+                            as={Link}
+                            to={`/user/${other.id}`}
+                            variant="primary"
+                        >
+                            {other.userName}
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            </div>
             <Button
                 className="m-1"
                 variant="primary"
@@ -184,15 +196,31 @@ export function Feed() {
                             <Button className="m-1" size="sm" variant="dark" href={`#/update/${post.id}`}>Update</Button>
                             <Button className="m-1" size="sm" variant="danger" onClick={() => remove(post.id)}>Delete</Button>
                         </div>
-                        <Card.Footer className="d-flex justify-content-between align-items-center">                        <Button
-                            className="m-1"
-                            variant="dark"
-                            disabled={post.wordCount !== null}
-                            onClick={() => fetchWordCount(post.id)}
-                        >
-                            {post.wordCount !== null ? post.wordCount : 'Word count'}
-                        </Button>
-
+                        <Card.Footer className="d-flex justify-content-between align-items-center">
+                            <Button
+                                className="m-1"
+                                variant="dark"
+                                disabled={post.wordCount !== null}
+                                onClick={() => fetchWordCount(post.id)}
+                            >
+                                {post.wordCount !== null ? post.wordCount : 'Word count'}
+                            </Button>
+                            <Button
+                                className="m-1"
+                                variant="dark"
+                                disabled={comments !== null}
+                                onClick={() => fetchCommentCount(post.id)}
+                            >
+                                {comments === null ? "Comment count" : comments + ' Comments'}
+                            </Button>
+                            <Button
+                                className="m-1"
+                                variant="dark"
+                                disabled={comments !== null}
+                                onClick={() => fetchCommentCount(post.id)}
+                            >
+                                {comments === null ? "See comments" : comments + ' Comments'}
+                            </Button>
                             <div className="m-1">
                                 {post.commonWords.size === 0 ? (
                                     <Button

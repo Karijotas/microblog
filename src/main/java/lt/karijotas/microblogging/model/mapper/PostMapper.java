@@ -5,12 +5,16 @@ import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
-
+import lt.karijotas.microblogging.service.PostService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class PostMapper {
 
     private final BloggerService bloggerService;
+    private static final Logger logger = LoggerFactory.getLogger(PostMapper.class);
+
 
     public PostMapper(BloggerService bloggerService) {
         this.bloggerService = bloggerService;
@@ -36,14 +40,18 @@ public class PostMapper {
     }
 
     public static Post toPost(PostDto entityDto) {
+        logger.info(entityDto.getName()+"toPost");
         var post = new Post();
         post.setName(entityDto.getName());
+        logger.info(post.getName()+"toPost");
         post.setBody(entityDto.getBody());
         return post;
     }
 
     public static PostDto toPostDto(Post post) {
+        logger.info(post.getName()+"toPostDto");
         var postDto = new PostDto();
+        logger.info(postDto.getName()+"toPostDto");
         postDto.setName(post.getName());
         postDto.setBody(post.getBody());
         return postDto;

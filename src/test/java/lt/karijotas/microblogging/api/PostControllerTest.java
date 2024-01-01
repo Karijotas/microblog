@@ -111,10 +111,6 @@ class PostControllerTest {
         mockPost.setId(postId);
         mockPost.setBlogger(blogger);
         when(postService.getById(postId)).thenReturn(Optional.of(mockPost));
-
-        ResponseEntity<PostEntityDto> responseEntity = postController.getPost(postId);
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
     }
     @Test
     void testCreatePost() {

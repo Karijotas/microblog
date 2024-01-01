@@ -1,10 +1,13 @@
 package lt.karijotas.microblogging.api;
 
+import lt.karijotas.microblogging.dao.CommentRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
+import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
+import lt.karijotas.microblogging.service.CommentService;
 import lt.karijotas.microblogging.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +31,15 @@ public class PostController {
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
     private final BloggerService bloggerService;
+    private final CommentService commentService;
+    private final CommentRepository commentRepository;
 
-    public PostController(PostService postService, BloggerService bloggerService) {
+    public PostController(PostService postService, BloggerService bloggerService, CommentService commentService,
+                          CommentRepository commentRepository) {
         this.postService = postService;
         this.bloggerService = bloggerService;
+        this.commentService = commentService;
+        this.commentRepository = commentRepository;
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -57,12 +65,12 @@ public class PostController {
     }
 
     @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<PostEntityDto> getPost(@PathVariable Long postId) {
-        var postOptional = postService.getById(postId);
-
-        return postOptional
-                .map(post -> ok(toPostEntityDto(post)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @ResponseBody
+    public Post getPost(@PathVariable Long postId) {
+        var postOptional = postService.getById(postId).orElseThrow(
+                () -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
+        logger.info("Returning a single post");
+        return postOptional;
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -77,6 +85,10 @@ public class PostController {
             Long id = bloggerService.findByUserName(userDetails.getUsername()).getId();
             if (postService.validateOwnership(id, postId)) {
                 logger.info("Attempt to delete Post by id: {}", postId);
+                List<Comment> comments = commentService.getAllByPostId(postId);
+                logger.info("Deleting {} comments from the post", comments.size());
+                commentRepository.deleteAll(comments);
+                comments.clear();
                 boolean deleted = postService.deleteById(postId);
                 if (deleted) {
                     return ResponseEntity.noContent().build();
@@ -94,6 +106,8 @@ public class PostController {
             Long id = bloggerService.findByUserName(userDetails.getUsername()).getId();
             if (postService.validateOwnership(id, postId)) {
                 var updated = postService.update(toPost(postDto), postId);
+                logger.info(updated.getName());
+                logger.info(String.valueOf(ok(toPostDto(updated))));
                 return ok(toPostDto(updated));
             }
         }
