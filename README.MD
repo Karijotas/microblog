@@ -22,8 +22,18 @@ then you can access the app with http://127.0.0.1:8080
 
 Use the following credentials to sign in:
 
-    Username: qa
-    Password: qa
+* Username: qa
+  * Password: qa
+* Username: blogger2
+  * Password: qa
+* Username: user123
+  * Password: pass123
+* Username: cool_blogger
+  * Password: qa
+* Username: blogger_x
+  * Password: qa
+
+Or after login create your own
 
 ### RELEASE NOTES
 
