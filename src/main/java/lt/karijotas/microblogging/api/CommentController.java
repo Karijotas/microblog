@@ -28,7 +28,7 @@ public class CommentController {
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public List<CommentEntityDto> getAll() {
+    public List<Comment> getAll() {
         return commentServiceImpl.getAll();
     }
 

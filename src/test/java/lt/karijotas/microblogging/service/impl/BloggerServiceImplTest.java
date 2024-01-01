@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static lt.karijotas.microblogging.model.mapper.BloggerMapper.toUserEntityDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,7 +45,7 @@ public class BloggerServiceImplTest {
 
         when(bloggerRepository.save(any(Blogger.class))).thenReturn(blogger);
 
-        Blogger savedBlogger = BloggerServiceImpl.create(blogger);
+        Blogger savedBlogger = BloggerServiceImpl.create(toUserEntityDto((blogger)));
 
         assertThat(savedBlogger).isNotNull();
         assertThat(savedBlogger.getId()).isEqualTo(1L);

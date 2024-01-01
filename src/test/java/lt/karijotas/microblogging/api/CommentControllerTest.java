@@ -29,9 +29,9 @@ public class CommentControllerTest {
 
     @Test
     void getAll_ReturnsAllComments() {
-        List<CommentEntityDto> mockComments = Collections.singletonList(new CommentEntityDto());
+        List<Comment> mockComments = Collections.singletonList(new Comment());
         when(commentServiceImpl.getAll()).thenReturn(mockComments);
-        List<CommentEntityDto> comments = commentController.getAll();
+        List<Comment> comments = commentController.getAll();
         assertEquals(mockComments, comments);
     }
 

@@ -76,7 +76,7 @@ class BloggerControllerTest {
     void register_ValidBlogger_ReturnsCreatedBlogger() {
         Blogger blogger = new Blogger();
 
-        when(BloggerServiceImpl.create(any(Blogger.class))).thenReturn(blogger);
+        when(BloggerServiceImpl.create(any(BloggerEntityDto.class))).thenReturn(blogger);
 
         ResponseEntity<Blogger> responseEntity = bloggerController.register(blogger);
 

@@ -73,7 +73,7 @@ public class CommentServiceImplTest {
         comments.add(new Comment(1L, "Comment 1", new Post()));
         comments.add(new Comment(2L, "Comment 2", new Post()));
         when(commentRepository.findAll()).thenReturn(comments);
-        List<CommentEntityDto> found = commentServiceImpl.getAll();
+        List<Comment> found = commentServiceImpl.getAll();
         assertEquals(2, found.size());
     }
 

@@ -24,17 +24,18 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
 
-
     @Autowired
     public PostServiceImpl(BloggerRepository bloggerRepository, PostRepository postRepository) {
         this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
     }
 
+    @Override
     public Boolean validateLength(Post post) {
         return !post.getBody().isEmpty() || !post.getName().isEmpty();
     }
 
+    @Override
     public Post create(PostEntityDto post) {
         Blogger blogger = bloggerRepository.getById(post.getBloggerId());
         if (validateLength(toPost(post))) {
@@ -48,6 +49,7 @@ public class PostServiceImpl implements PostService {
         throw new BlogValidationExeption("Post title and body shouldn't be empty");
     }
 
+    @Override
     public Post update(Post post, Long id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
         logger.info(existingPost.getName() + post.getName());
@@ -56,6 +58,7 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(existingPost);
     }
 
+    @Override
     public String[] splitPost(Post post) {
         String text = post.getBody();
         return text.replaceAll("[^\\p{L}\\p{Nd}]+", " ")
@@ -64,10 +67,12 @@ public class PostServiceImpl implements PostService {
                 .split("\\s+");
     }
 
+    @Override
     public Integer wordCount(Post post) {
         return splitPost(post).length;
     }
 
+    @Override
     public Map<String, Long> mostUsedWords(Post post, Long limit) {
         String[] words = splitPost(post);
         return Arrays.stream(words)
@@ -82,21 +87,25 @@ public class PostServiceImpl implements PostService {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
+    @Override
     public List<Post> getAll() {
         return postRepository.findAll();
 
     }
 
+    @Override
     public List<Post> getAllByCurrentAuthor(Long id) {
         return postRepository.findAllByBloggerId(id);
     }
 
+    @Override
     public List<Post> getAllByAuthor(Long id) {
         List<Post> posts = postRepository.findAllByBloggerId(id);
         posts.forEach(this::increaseViewCount);
         return posts;
     }
 
+    @Override
     public void increaseViewCount(Post post) {
         if (post.getCount() == null) {
             post.setCount(1);
@@ -106,10 +115,12 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
+    @Override
     public Boolean validateOwnership(Long userId, Long postId) {
         return postRepository.findById(postId).stream().anyMatch(post -> post.getBlogger().getId().equals(userId));
     }
 
+    @Override
     public Boolean deleteById(Long id) {
         try {
             postRepository.deleteById(id);
@@ -119,6 +130,7 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
     public Optional<Post> getById(Long id) {
         return postRepository.findById(id);
     }

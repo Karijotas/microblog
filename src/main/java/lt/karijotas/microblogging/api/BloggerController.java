@@ -46,7 +46,7 @@ public class BloggerController {
 
     @PostMapping("/register")
     public ResponseEntity<Blogger> register(@Valid @RequestBody Blogger blogger) {
-        var createdUser = BloggerServiceImpl.create(blogger);
+        var createdUser = BloggerServiceImpl.create(toUserEntityDto(blogger));
         return ok(createdUser);
     }
 

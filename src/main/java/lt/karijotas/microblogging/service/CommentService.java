@@ -6,18 +6,8 @@ import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentService {
+public interface CommentService extends GenericService<Comment, CommentEntityDto> {
     Boolean validateLength(Comment comment);
-
-    Comment create(CommentEntityDto commentEntityDto);
-
-    List<CommentEntityDto> getAll();
-
-    Boolean deleteById(Long id);
-
-    Optional<Comment> getById(Long id);
 
     List<Comment> getAllByPostId(Long postId);
 }
-
-

@@ -3,6 +3,7 @@ package lt.karijotas.microblogging.service.impl;
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
+import lt.karijotas.microblogging.model.dto.BloggerEntityDto;
 import lt.karijotas.microblogging.service.BloggerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,14 +25,16 @@ public class BloggerServiceImpl implements BloggerService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Blogger create(Blogger blogger) {
+    @Override
+    public Blogger create(BloggerEntityDto blogger) {
         var newUser = new Blogger();
-        newUser.setUserName(blogger.getUserName());
+        newUser.setUserName(blogger.getName());
         String encodedPassword = passwordEncoder.encode(blogger.getPassword());
         newUser.setPassword(encodedPassword);
         return bloggerRepository.save(newUser);
     }
 
+    @Override
     public Blogger update(Blogger blogger, Long id) {
         Blogger existingBlogger = bloggerRepository.findById(id)
                 .orElseThrow(() -> new BlogValidationExeption("User doesn't exist", "id", "User doesn't exist", id.toString()));
@@ -40,6 +43,7 @@ public class BloggerServiceImpl implements BloggerService {
         return bloggerRepository.save(existingBlogger);
     }
 
+    @Override
     public Blogger findByUserName(String username) {
         return bloggerRepository.findBloggerByUserName(username);
     }
@@ -64,6 +68,7 @@ public class BloggerServiceImpl implements BloggerService {
         }
     }
 
+    @Override
     public List<Blogger> getAllNotCurrentUsers(String username) {
         Long id = findByUserName(username).getId();
         return bloggerRepository.findAll()
