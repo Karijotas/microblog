@@ -193,7 +193,7 @@ export function SinglePost() {
                 <div id="comments">
                     <h3>Comments</h3>
                     {comments.map((comment) => (
-                        <Card className="m-5">
+                        <Card className="m-5" key={comment.id}>
                             <Card.Header>Anonymous</Card.Header>
                             <Card.Body>
                                 <blockquote className="blockquote mb-0">

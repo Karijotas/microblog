@@ -37,4 +37,4 @@ Bugs fixed and functionality added:
 * Fixed update view not displaying Post title and body
 
 
-
+![img.png](img.png)

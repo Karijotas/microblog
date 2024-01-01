@@ -85,7 +85,5 @@ public class ApiExceptionHandler {
     public void handleAllExceptions(Exception exception) {
         logger.error("All Exceptions handler: {}", exception.getMessage());
     }
-
-
 }
 

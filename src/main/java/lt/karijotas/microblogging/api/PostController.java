@@ -130,5 +130,4 @@ public class PostController {
         Map<String, Long> mostUsedWords = postService.mostUsedWords(post, limit);
         return ResponseEntity.ok().body(mostUsedWords);
     }
-
 }

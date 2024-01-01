@@ -1,6 +1,5 @@
 package lt.karijotas.microblogging.service;
 
-import lt.karijotas.microblogging.api.PostController;
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
@@ -50,7 +49,7 @@ public class PostService extends GenericService {
 
     public Post update(Post post, Long id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
-      logger.info(existingPost.getName()+ post.getName());
+        logger.info(existingPost.getName() + post.getName());
         existingPost.setName(post.getName());
         existingPost.setBody(post.getBody());
         return postRepository.save(existingPost);
