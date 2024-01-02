@@ -98,7 +98,7 @@ public class PostServiceImplTest {
     void splitPost_validPost_ReturnsArrayOfWords() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words.");
-        String[] words = postServiceImpl.splitPost(post);
+        String[] words = postServiceImpl.splitPostBody(post);
         assertThat(words).isNotNull();
         assertThat(words).containsExactly("this", "is", "a", "test", "post", "it", "has", "some", "words");
     }
@@ -115,7 +115,7 @@ public class PostServiceImplTest {
     void mostUsedWords_validPostAndLimit_ReturnsMostUsedWords() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words. This is a test post for testing.");
-        when(postServiceImpl.splitPost(post)).thenReturn(new String[]{"this", "is", "a", "test", "post", "it", "has", "some", "words", "this", "is", "a", "test", "post", "for", "testing"});
+        when(postServiceImpl.splitPostBody(post)).thenReturn(new String[]{"this", "is", "a", "test", "post", "it", "has", "some", "words", "this", "is", "a", "test", "post", "for", "testing"});
         Map<String, Long> mostUsed = postServiceImpl.mostUsedWords(post, 3L);
         assertThat(mostUsed).isNotNull();
         assertThat(mostUsed.size()).isLessThanOrEqualTo(3);

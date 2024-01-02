@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public String[] splitPost(Post post) {
+    public String[] splitPostBody(Post post) {
         String text = post.getBody();
         return text.replaceAll("[^\\p{L}\\p{Nd}]+", " ")
                 .toLowerCase()
@@ -73,12 +73,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Integer wordCount(Post post) {
-        return splitPost(post).length;
+        return splitPostBody(post).length;
     }
 
     @Override
     public Map<String, Long> mostUsedWords(Post post, Long limit) {
-        String[] words = splitPost(post);
+        String[] words = splitPostBody(post);
         return Arrays.stream(words)
                 .collect(Collectors.groupingBy(
                         word -> word,

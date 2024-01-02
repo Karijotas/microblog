@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface PostService extends GenericService<Post, PostEntityDto> {
 
-    String[] splitPost(Post post);
+    String[] splitPostBody(Post post);
 
     Integer wordCount(Post post);
 
