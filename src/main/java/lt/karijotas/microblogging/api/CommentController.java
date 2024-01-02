@@ -2,6 +2,7 @@ package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
+import lt.karijotas.microblogging.service.CommentService;
 import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,9 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/comment")
 public class CommentController {
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);
-    private final CommentServiceImpl commentServiceImpl;
+    private final CommentService commentServiceImpl;
 
-    public CommentController(CommentServiceImpl commentServiceImpl) {
+    public CommentController(CommentService commentServiceImpl) {
         this.commentServiceImpl = commentServiceImpl;
     }
 

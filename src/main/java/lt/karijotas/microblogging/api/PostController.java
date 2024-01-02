@@ -6,6 +6,9 @@ import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
+import lt.karijotas.microblogging.service.BloggerService;
+import lt.karijotas.microblogging.service.CommentService;
+import lt.karijotas.microblogging.service.PostService;
 import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
 import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import lt.karijotas.microblogging.service.impl.PostServiceImpl;
@@ -29,15 +32,15 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/post")
 public class PostController {
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
-    private final PostServiceImpl postServiceImpl;
-    private final BloggerServiceImpl BloggerServiceImpl;
-    private final CommentServiceImpl commentServiceImpl;
+    private final PostService postServiceImpl;
+    private final BloggerService BloggerServiceImpl;
+    private final CommentService commentServiceImpl;
     private final CommentRepository commentRepository;
 
-    public PostController(PostServiceImpl postServiceImpl, BloggerServiceImpl BloggerServiceImpl, CommentServiceImpl commentServiceImpl,
+    public PostController(PostService postServiceImpl, BloggerService bloggerServiceImpl, CommentService commentServiceImpl,
                           CommentRepository commentRepository) {
         this.postServiceImpl = postServiceImpl;
-        this.BloggerServiceImpl = BloggerServiceImpl;
+        this.BloggerServiceImpl = bloggerServiceImpl;
         this.commentServiceImpl = commentServiceImpl;
         this.commentRepository = commentRepository;
     }
