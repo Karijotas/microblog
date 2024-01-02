@@ -55,6 +55,7 @@ Bugs fixed and functionality added:
 * Fixed update view not displaying Post title and body
 * Implemented Docker containerization for the app
 * Users can delete posts on their own posts, they cannot delete comments in the posts of other users
+* Comment count shown only for the post that owns them
 
 
 ![img.png](img.png)
