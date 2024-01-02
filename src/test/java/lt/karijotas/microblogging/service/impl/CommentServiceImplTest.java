@@ -6,7 +6,6 @@ import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
-import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,10 +18,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 public class CommentServiceImplTest {
 
@@ -96,5 +100,14 @@ public class CommentServiceImplTest {
         when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
         Comment found = commentServiceImpl.getById(1L).get();
         assertEquals(found, comment);
+    }
+
+    @Test
+    void updateComment_ReturnsException(){
+        Comment comment = new Comment();
+        comment.setId(1L);
+        assertThatThrownBy(() ->{
+            commentServiceImpl.update(comment, comment.getId());
+        });
     }
 }

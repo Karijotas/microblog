@@ -1,9 +1,7 @@
 package lt.karijotas.microblogging.model.mapper;
 
 import lt.karijotas.microblogging.dao.PostRepository;
-import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Comment;
-import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 
 public class CommentMapper {

@@ -1,7 +1,7 @@
 package lt.karijotas.microblogging.service.impl;
+
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.model.Blogger;
-import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,11 +18,14 @@ import java.util.Optional;
 
 import static lt.karijotas.microblogging.model.mapper.BloggerMapper.toUserEntityDto;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 public class BloggerServiceImplTest {
 

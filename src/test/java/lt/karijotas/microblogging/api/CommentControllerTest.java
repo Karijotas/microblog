@@ -1,7 +1,6 @@
 package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Comment;
-import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,7 +13,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class CommentControllerTest {
     @Mock

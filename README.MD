@@ -16,7 +16,7 @@ If you want to run the app in Docker, run:
 then
 
     docker run -dp 127.0.0.1:8080:8080 microblog
-then you can access the app with http://127.0.0.1:8080
+then you can access the app with http://localhost:8080
 
 ### Sign In
 

@@ -1,7 +1,5 @@
 package lt.karijotas.microblogging.service;
 
-import lt.karijotas.microblogging.model.Post;
-
 import java.util.List;
 import java.util.Optional;
 
