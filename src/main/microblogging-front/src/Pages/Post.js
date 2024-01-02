@@ -13,6 +13,7 @@ export function Post() {
     const [currentUser, setCurrentUser] = useState("");
     const [comments, setComments] = useState(null);
     const [linkComments, setLinkComments] = useState(false);
+    const [displayedPostId, setDisplayedPostId] = useState(null);
 
     useEffect(() => {
         fetchPost();
@@ -102,6 +103,7 @@ export function Post() {
     };
 
     const fetchCommentCount = (id) => {
+        setDisplayedPostId(id);
         fetch(`/comment/count/` + id)
             .then((response) => response.text())
             .then((textResponse) => setComments(textResponse))
@@ -193,10 +195,14 @@ export function Post() {
                             <Button
                                 className="m-1"
                                 variant="dark"
-                                disabled={comments !== null}
+                                disabled={displayedPostId === post.id}
                                 onClick={() => fetchCommentCount(post.id)}
                             >
-                                {comments === null ? "Comment count" : comments + ' Comments'}
+                                {displayedPostId === post.id
+                                    ? comments === null
+                                        ? 'Comment count'
+                                        : comments + ' Comments'
+                                    : 'Comment count'}
                             </Button>
                             <Button
                                 className="m-1"

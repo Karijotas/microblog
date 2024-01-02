@@ -13,6 +13,7 @@ export function Feed() {
     const [others, setOthers] = useState([]);
     const [comments, setComments] = useState(null);
     const [linkComments, setLinkComments] = useState(false);
+    const [displayedPostId, setDisplayedPostId] = useState(null);
 
 
     useEffect(() => {
@@ -119,6 +120,7 @@ export function Feed() {
     };
 
     const fetchCommentCount = (id) => {
+        setDisplayedPostId(id);
         fetch(`/comment/count/` + id)
             .then((response) => response.text())
             .then((textResponse) => setComments(textResponse))
@@ -211,13 +213,17 @@ export function Feed() {
                                 {post.wordCount !== null ? post.wordCount : 'Word count'}
                             </Button>
                             <Button
-                                className="m-1"
-                                variant="dark"
-                                disabled={comments !== null}
-                                onClick={() => fetchCommentCount(post.id)}
-                            >
-                                {comments === null ? "Comment count" : comments + ' Comments'}
-                            </Button>
+                        className="m-1"
+                        variant="dark"
+                        disabled={displayedPostId === post.id} // Disable if it's the displayed post
+                        onClick={() => fetchCommentCount(post.id)}
+                    >
+                        {displayedPostId === post.id
+                            ? comments === null
+                                ? 'Comment count'
+                                : comments + ' Comments'
+                            : 'Comment count'}
+                    </Button>
                             <Button
                                 className="m-1"
                                 variant="dark"
