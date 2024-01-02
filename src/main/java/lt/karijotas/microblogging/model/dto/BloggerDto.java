@@ -10,7 +10,6 @@ import java.util.Objects;
 public class BloggerDto {
     private String name;
     private String password;
-    private List<Post> postList;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
@@ -22,16 +21,6 @@ public class BloggerDto {
     private String modifiedBy;
 
     public BloggerDto() {
-    }
-
-    public BloggerDto(String name, String password, List<Post> postList, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
-        this.name = name;
-        this.password = password;
-        this.postList = postList;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.createdBy = createdBy;
-        this.modifiedBy = modifiedBy;
     }
 
     public String getName() {
@@ -50,13 +39,6 @@ public class BloggerDto {
         this.password = password;
     }
 
-    public List<Post> getPostList() {
-        return postList;
-    }
-
-    public void setPostList(List<Post> postList) {
-        this.postList = postList;
-    }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;

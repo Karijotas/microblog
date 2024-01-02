@@ -9,11 +9,6 @@ public class CommentDto {
     public CommentDto() {
     }
 
-    public CommentDto(String content, Long postId) {
-        this.content = content;
-        this.postId = postId;
-    }
-
     public String getContent() {
         return content;
     }

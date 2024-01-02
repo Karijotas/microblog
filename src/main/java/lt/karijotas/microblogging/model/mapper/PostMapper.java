@@ -27,16 +27,6 @@ public class PostMapper {
         return postEntityDto;
     }
 
-    public Post toPost(PostEntityDto entityDto) {
-        var post = new Post();
-        post.setId(entityDto.getId());
-        post.setName(entityDto.getName());
-        post.setBody(entityDto.getBody());
-        post.setBlogger(BloggerServiceImpl.getById(entityDto.getId()).orElseThrow(
-                () -> new BlogValidationExeption("blogger doesn't exist", "id", "blogger doesn't exist", entityDto.getId().toString())));
-        return post;
-    }
-
     public static Post toPost(PostDto entityDto) {
         logger.info(entityDto.getName() + "toPost");
         var post = new Post();
