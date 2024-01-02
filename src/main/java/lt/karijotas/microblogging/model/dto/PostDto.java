@@ -22,16 +22,6 @@ public class PostDto {
     public PostDto() {
     }
 
-    public PostDto(String name, String body, Long bloggerId, LocalDateTime createdDate, LocalDateTime modifiedDate, String createdBy, String modifiedBy) {
-        this.name = name;
-        this.body = body;
-        this.bloggerId = bloggerId;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.createdBy = createdBy;
-        this.modifiedBy = modifiedBy;
-    }
-
     public String getName() {
         return name;
     }

@@ -3,17 +3,11 @@ package lt.karijotas.microblogging.service;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class GenericService {
-    public List getAll() {
-        return null;
-    }
-
-    public Optional getById(Long id) {
-        return Optional.empty();
-    }
-
-    public Boolean deleteById(Long id) {
-        return true;
-    }
-
+public interface GenericService<T, D> {
+    T create(D entity);
+    T update(T entity, Long id);
+    List<T> getAll();
+    Optional<T> getById(Long id);
+    Boolean deleteById(Long id);
+    Boolean validateLength(T entity);
 }

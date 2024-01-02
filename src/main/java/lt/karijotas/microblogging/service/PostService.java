@@ -1,93 +1,24 @@
 package lt.karijotas.microblogging.service;
 
-import lt.karijotas.microblogging.dao.BloggerRepository;
-import lt.karijotas.microblogging.dao.PostRepository;
-import lt.karijotas.microblogging.exception.BlogValidationExeption;
-import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
 
-@Service
-public class PostService extends GenericService {
-    private final BloggerRepository bloggerRepository;
-    private final PostRepository postRepository;
+public interface PostService extends GenericService<Post, PostEntityDto> {
 
-    @Autowired
-    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
-        this.bloggerRepository = bloggerRepository;
-        this.postRepository = postRepository;
-    }
+    String[] splitPostBody(Post post);
 
-    public Post create(PostEntityDto post) {
-        Blogger blogger = bloggerRepository.getById(post.getBloggerId());
+    Integer wordCount(Post post);
 
-        var newPost = new Post();
-        newPost.setId(post.getId());
-        newPost.setName(post.getName());
-        newPost.setBody(post.getBody());
-        newPost.setBlogger(blogger);
-        return postRepository.save(newPost);
-    }
+    Map<String, Long> mostUsedWords(Post post, Long limit);
 
-    public Post update(Post post, Long id) {
-        Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
-        existingPost.setName(post.getName());
-        existingPost.setBody(post.getBody());
-        return postRepository.save(existingPost);
-    }
+    List<Post> getAllByCurrentAuthor(Long id);
 
-    public String[] splitPost(Post post) {
-        String text = post.getBody();
-        return text.replaceAll("[^\\p{L}\\p{Nd}]+", " ")
-                .toLowerCase()
-                .trim()
-                .split("\\s+");
-    }
+    List<Post> getAllByAuthor(Long id);
 
-    public Integer wordCount(Post post) {
-        return splitPost(post).length;
-    }
+    void increaseViewCount(Post post);
 
-    public Map<String, Long> mostUsedWords(Post post, Long limit) {
-        String[] words = splitPost(post);
-        return Arrays.stream(words)
-                .collect(Collectors.groupingBy(
-                        word -> word,
-                        Collectors.counting()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(limit)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-    }
-
-
-    @Override
-    public List<Post> getAll() {
-        return postRepository.findAll();
-
-    }
-
-    @Override
-    public Boolean deleteById(Long id) {
-        try {
-            postRepository.deleteById(id);
-            return true;
-        } catch (EmptyResultDataAccessException e) {
-            return false;
-        }
-    }
-
-    @Override
-    public Optional<Post> getById(Long id) {
-        return postRepository.findById(id);
-    }
+    Boolean validateOwnership(Long userId, Long postId);
 }

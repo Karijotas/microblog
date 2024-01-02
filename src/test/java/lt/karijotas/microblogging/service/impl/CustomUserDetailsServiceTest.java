@@ -1,15 +1,15 @@
-package lt.karijotas.microblogging.service;
+package lt.karijotas.microblogging.service.impl;
 
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
+import lt.karijotas.microblogging.service.CustomUserDetailsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,12 +38,12 @@ public class CustomUserDetailsServiceTest {
         existingBlogger.setId(1L);
         existingBlogger.setUserName("JohnDoe");
         existingBlogger.setPassword("password");
-        when(userRepository.findByUserName("JohnDoe")).thenReturn(existingBlogger);
-        when(passwordEncoder.encode(existingBlogger.getPassword())).thenReturn("encodedPassword");
+        when(userRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
+        when(passwordEncoder.encode(existingBlogger.getPassword())).thenReturn("password");
         UserDetails userDetails = customUserDetailsService.loadUserByUsername("JohnDoe");
         assertThat(userDetails).isNotNull();
         assertThat(userDetails.getUsername()).isEqualTo("JohnDoe");
-        assertThat(userDetails.getPassword()).isEqualTo("encodedPassword");
+        assertThat(userDetails.getPassword()).isEqualTo("password");
         assertThat(userDetails.getAuthorities()).hasSize(1);
         assertThat(userDetails.getAuthorities()
                 .iterator()
@@ -54,7 +54,7 @@ public class CustomUserDetailsServiceTest {
 
     @Test
     void loadUserByUsername_nonExistingUser_ThrowsException() {
-        when(userRepository.findByUserName("NonExistingUser")).thenReturn(null);
+        when(userRepository.findBloggerByUserName("NonExistingUser")).thenReturn(null);
 
         Throwable exception = catchThrowable(() -> customUserDetailsService.loadUserByUsername("NonExistingUser"));
 

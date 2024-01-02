@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 
-export function Post() {
+export function Create() {
     const JSON_HEADERS = {
         "Content-Type": "application/json",
     };
@@ -10,6 +10,9 @@ export function Post() {
     const [name, setName] = useState("");
     const [postBody, setPostBody] = useState("");
     const [bloggerId, setCurrentUser] = useState("");
+    const [isTitleValid, setIsTitleValid] = useState(true);
+    const [isBodyValid, setIsBodyValid] = useState(true);
+    const [isBack, setBack] = useState(false);
 
 
     const handlePostBodyChange = (e) => {
@@ -53,27 +56,67 @@ export function Post() {
     };
 
     const handleCreatePost = () => {
+        if (!name.trim()) {
+            setIsTitleValid(false);
+            return;
+        }
+        if (!postBody.trim()) {
+            setIsBodyValid(false);
+            return;
+        }
         setIsCreatingPost(true);
         createPost();
+    };
+    const handleBack = () => {
+        window.location.href = "/"
     };
 
     return (
         <div className="container mt-5">
+            <Button
+                className="d-flex justify-content-between align-items-center mb-3"
+                variant="dark"
+                disabled={isBack}
+                onClick={!isBack ? handleBack : null}
+            >
+                {isBack ? 'Loading…' : 'Return to the feed'}
+            </Button>
             <div className="row justify-content-center">
                 <div className="col-md-6">
                     <Form>
                         <Form.Group controlId="formGroupPostBody">
                             <Form.Label>Title</Form.Label>
-                            <Form.Control type="name" placeholder="Enter Title" onChange={(e) => nameHandler(e)} />
+                            <Form.Control
+                                type="name"
+                                placeholder="Enter Title"
+                                onChange={(e) => {
+                                    nameHandler(e);
+                                    setIsTitleValid(true);
+                                }}
+                                isInvalid={!isTitleValid}
+                            />
+                            {!isTitleValid && (
+                                <Form.Control.Feedback type="invalid">
+                                    Title cannot be empty
+                                </Form.Control.Feedback>
+                            )}
                             <Form.Label>Post Body</Form.Label>
                             <Form.Control
                                 as="textarea"
-                                rows={6}  
+                                rows={6}
                                 placeholder="Write your post here..."
-                                onChange={handlePostBodyChange}
+                                onChange={(e) => {
+                                    handlePostBodyChange(e);
+                                    setIsBodyValid(true);
+                                }}
+                                isInvalid={!isBodyValid}
                             />
+                            {!isBodyValid && (
+                                <Form.Control.Feedback type="invalid">
+                                    Post body cannot be empty
+                                </Form.Control.Feedback>
+                            )}
                         </Form.Group>
-
                         <Button
                             className="btn-block"
                             variant="primary"

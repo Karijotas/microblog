@@ -12,11 +12,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    # for test case scenario: ddl-auto: drop-and-create
     generate-ddl: false
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         format_sql: true
   datasource:
     url: jdbc:h2:file:./src/main/resources/db/microblog
@@ -31,12 +30,5 @@ logging:
       karijotas: DEBUG
     org:
       springframework: INFO
-      hibernate:
-        SQL: DEBUG
-        type: TRACE
-      type:
-        descriptor:
-          sql:
-            BasicBinder: DEBUG
 Server:
   Port: 8080

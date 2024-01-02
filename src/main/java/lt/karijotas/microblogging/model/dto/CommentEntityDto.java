@@ -1,13 +1,12 @@
 package lt.karijotas.microblogging.model.dto;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class PostEntityDto extends PostDto {
-    private Long id;
+public class CommentEntityDto extends CommentDto {
 
-    public PostEntityDto() {
-        super();
+    public Long id;
+
+    public CommentEntityDto() {
     }
 
     public Long getId() {
@@ -17,5 +16,4 @@ public class PostEntityDto extends PostDto {
     public void setId(Long id) {
         this.id = id;
     }
-
 }

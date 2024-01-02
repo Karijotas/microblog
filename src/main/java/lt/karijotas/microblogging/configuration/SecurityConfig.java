@@ -26,14 +26,20 @@ public class SecurityConfig {
         http.csrf((csrf) -> csrf.disable()).
                 authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/blogger/register").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/swagger-ui/").permitAll()
-                        .anyRequest().authenticated()
-                ).formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("http://localhost:3000")
-                )
+                        .requestMatchers("/post/user").permitAll()
+                        .requestMatchers("blogger/current-user/id").permitAll()
+                        .requestMatchers("/resources/**").permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
+                .formLogin(formLogin -> formLogin
+                        .defaultSuccessUrl("/"))
+                .logout(logout -> logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll());
 
         return http.build();
     }
