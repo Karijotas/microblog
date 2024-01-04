@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, ListGroup } from "react-bootstrap";
-import { Link, json } from "react-router-dom";
-import { Counter } from "./Counter";
+import { Card, ListGroup } from "react-bootstrap";
+
 
 export function Feed() {
     const [isLogin, setLogin] = useState(false);
@@ -149,112 +148,87 @@ export function Feed() {
 
             <h6>{currentUser ? "Current user is: " + currentUser : ''}</h6>
             <div className="d-flex flex-column align-items-start">
-                <ListGroup className="w-20">
-                    {others.map((other) => (
-                        <ListGroup.Item
-                            key={other.id}
-                            action
-                            as={Link}
-                            to={`/user/${other.id}`}
-                            variant="primary"
-                        >
-                            {other.userName}
-                        </ListGroup.Item>
-                    ))}
-                </ListGroup>
+                {others.map((other) => (<div>
+                    <a href={`#/user/${other.id}`}>{other.userName}</a>
+                </div>
+
+                ))}
             </div>
-            <Button
-                className="m-1"
-                variant="primary"
+            <button
                 disabled={isRegister}
                 onClick={!isRegister ? handleRegister : null}
             >
                 {isRegister ? 'Loading…' : 'Register'}
-            </Button>
+            </button>
 
-            <Button
-                className="m-1"
-                variant="primary"
+            <button
                 disabled={isRegister}
                 onClick={!isRegister ? handlePost : null}
             >
                 {isRegister ? 'Loading…' : 'Create'}
-            </Button>
+            </button>
 
-            <Button
-                className='ml-2'
-                variant="danger"
+            <button
                 disabled={isLogin}
                 onClick={!isLogin ? handleLogout : null}
             >
                 {isLogin ? 'Loading…' : 'LogOut'}
-            </Button>
+            </button>
 
             <div id="login">
                 {posts.map((post) => (
-                    <Card className="mb-3" key={post.id}>
-                        <Card.Header>
-                            <h3>{post.name}</h3>
-                            <h6>Author: {post.blogger.userName} ViewCount: {post.count}</h6>
-                        </Card.Header>
-                        <Card.Body>
-                            <Card.Text>{post.body}</Card.Text>
-                        </Card.Body><div className="d-flex justify-content-end align-items-center">
-                            <Button className="m-1" size="sm" variant="dark" href={`#/update/${post.id}`}>Update</Button>
-                            <Button className="m-1" size="sm" variant="danger" onClick={() => remove(post.id)}>Delete</Button>
+                    <article className="mb-3" key={post.id}>
+                        <h3>{post.name}</h3>
+                        <h6>Author: {post.blogger.userName} ViewCount: {post.count}</h6>
+                        <main>
+                            <p>{post.body}</p>
+                        </main><div className="d-flex justify-content-end align-items-center">
+                            <button href={`#/update/${post.id}`}>Update</button>
+                            <button onClick={() => remove(post.id)}>Delete</button>
                         </div>
-                        <Card.Footer className="d-flex justify-content-between align-items-center">
-                            <Button
-                                className="m-1"
-                                variant="dark"
+                        <footer>
+                            <button
                                 disabled={post.wordCount !== null}
                                 onClick={() => fetchWordCount(post.id)}
                             >
                                 {post.wordCount !== null ? post.wordCount : 'Word count'}
-                            </Button>
-                            <Button
-                        className="m-1"
-                        variant="dark"
-                        disabled={displayedPostId === post.id} // Disable if it's the displayed post
-                        onClick={() => fetchCommentCount(post.id)}
-                    >
-                        {displayedPostId === post.id
-                            ? comments === null
-                                ? 'Comment count'
-                                : comments + ' Comments'
-                            : 'Comment count'}
-                    </Button>
-                            <Button
-                                className="m-1"
-                                variant="dark"
+                            </button>
+                            <button
+                                disabled={displayedPostId === post.id} // Disable if it's the displayed post
+                                onClick={() => fetchCommentCount(post.id)}
+                            >
+                                {displayedPostId === post.id
+                                    ? comments === null
+                                        ? 'Comment count'
+                                        : comments + ' Comments'
+                                    : 'Comment count'}
+                            </button>
+                            <button
                                 disabled={linkComments !== false}
                                 onClick={() => handleComments(post.id)}
                             >
                                 {linkComments == false ? "See comments" : handleComments(post.id)}
-                            </Button>
-                            <div className="m-1">
+                            </button>
+                            <div>
                                 {post.commonWords.size === 0 ? (
-                                    <Button
-                                        variant="dark"
+                                    <button
                                         disabled={post.commonWords.size !== 0}
                                         onClick={() => fetchMostUsedWords(post.id, 5)}
                                     >
                                         Most common words
-                                    </Button>
+                                    </button>
                                 ) : (
-                                    <ListGroup horizontal>
+                                    <ul horizontal>
                                         {Array.from(post.commonWords.entries()).map(([count, word]) => (
-                                            <ListGroup.Item key={count}>
+                                            <li key={count}>
                                                 {word}: {count}
-                                            </ListGroup.Item>
+                                            </li>
                                         ))}
-                                    </ListGroup>
+                                    </ul>
                                 )}
                             </div>
-                        </Card.Footer>
-
-
-                    </Card>
+                        </footer>
+                    </article>
                 ))}
             </div>
         </main>

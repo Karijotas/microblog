@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 @AutoConfigureTestDatabase
@@ -154,5 +155,20 @@ class BloggerControllerTest {
 
         assertEquals(404, responseEntity.getStatusCodeValue());
         assertEquals("No authenticated user found.", responseEntity.getBody());
+    }
+
+    @Test
+    void getAllNotCurrentUsers_ReturnsAllNotCurrentUsers(){
+        String username ="testName";
+        UserDetails userDetails = User.withUsername(username).password("password").roles("USER").build();
+        Long userId = 1L;
+        Blogger mockBlogger = new Blogger();
+        mockBlogger.setId(userId);
+        Long userIdTwo = 1L;
+        Blogger secondMockBlogger = new Blogger();
+        mockBlogger.setId(userId);
+        List<Blogger> bloggers = List.of(mockBlogger, secondMockBlogger);
+        List<Blogger> bloggersNotCurrent = bloggerController.getAllNotCurrentUsers(userDetails);
+        assertNotEquals(bloggers, bloggersNotCurrent);
     }
 }
