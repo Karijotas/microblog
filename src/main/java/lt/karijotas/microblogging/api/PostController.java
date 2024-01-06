@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static lt.karijotas.microblogging.model.mapper.PostMapper.*;
 import static org.springframework.http.ResponseEntity.ok;
@@ -59,7 +60,7 @@ public class PostController {
     public ResponseEntity<List<Post>> getAllByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
-            Long id = BloggerService.findByUserName(username).getId();
+            UUID id = BloggerService.findByUserName(username).getId();
             return ResponseEntity.ok(postService.getAllByCurrentAuthor(id));
         }
         return null;
@@ -67,13 +68,13 @@ public class PostController {
 
     @GetMapping(value = "/user/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public List<Post> getAllByUserId(@PathVariable Long userId) {
+    public List<Post> getAllByUserId(@PathVariable UUID userId) {
         return postService.getAllByAuthor(userId);
     }
 
     @GetMapping(value = "/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public Post getPost(@PathVariable Long postId) {
+    public Post getPost(@PathVariable UUID postId) {
         var postOptional = postService.getById(postId).orElseThrow(
                 () -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
         return postOptional;
@@ -86,9 +87,9 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> deletePost(@PathVariable UUID postId, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            Long id = BloggerService.findByUserName(userDetails.getUsername()).getId();
+            UUID id = BloggerService.findByUserName(userDetails.getUsername()).getId();
             if (postService.validateOwnership(id, postId)) {
                 logger.info("Attempt to delete Post by id: {}", postId);
                 List<Comment> comments = commentService.getAllByPostId(postId);
@@ -103,9 +104,9 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable Long postId, @Valid @RequestBody PostDto postDto, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<PostDto> updatePost(@PathVariable UUID postId, @Valid @RequestBody PostDto postDto, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            Long id = BloggerService.findByUserName(userDetails.getUsername()).getId();
+            UUID id = BloggerService.findByUserName(userDetails.getUsername()).getId();
             if (postService.validateOwnership(id, postId)) {
                 var updated = postService.update(toPost(postDto), postId);
                 return ok(toPostDto(updated));
@@ -115,7 +116,7 @@ public class PostController {
     }
 
     @GetMapping(value = "/{postId}/wordcount", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> getPostWordCount(@PathVariable Long postId) {
+    public ResponseEntity<Integer> getPostWordCount(@PathVariable UUID postId) {
         Post post = postService.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
         Integer wordCount = postService.wordCount(post);
@@ -124,7 +125,7 @@ public class PostController {
 
 
     @GetMapping(value = "/{postId}/wordcount/{limit}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Map<String, Long>> mostUsedWords(@PathVariable Long postId, @PathVariable Long limit) {
+    public ResponseEntity<Map<String, Long>> mostUsedWords(@PathVariable UUID postId, @PathVariable Long limit) {
         Post post = postService.getById(postId)
                 .orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", postId.toString()));
         Map<String, Long> mostUsedWords = postService.mostUsedWords(post, limit);

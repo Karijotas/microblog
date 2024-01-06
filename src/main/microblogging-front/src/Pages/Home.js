@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Card, ListGroup } from "react-bootstrap";
 
 
 export function Feed() {
@@ -147,7 +146,7 @@ export function Feed() {
             <h1>BLOG</h1>
 
             <h6>{currentUser ? "Current user is: " + currentUser : ''}</h6>
-            <div className="d-flex flex-column align-items-start">
+            <div className="userMenu">
                 {others.map((other) => (<div>
                     <a href={`#/user/${other.id}`}>{other.userName}</a>
                 </div>
@@ -177,8 +176,8 @@ export function Feed() {
 
             <div id="login">
                 {posts.map((post) => (
-                    <article className="mb-3" key={post.id}>
-                        <h3>{post.name}</h3>
+                    <article className="post" key={post.id}>
+                        <h3 className="header">{post.name}</h3>
                         <h6>Author: {post.blogger.userName} ViewCount: {post.count}</h6>
                         <main>
                             <p>{post.body}</p>

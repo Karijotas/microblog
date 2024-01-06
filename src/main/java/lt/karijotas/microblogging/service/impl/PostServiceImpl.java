@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
@@ -54,7 +55,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post update(Post post, Long id) {
+    public Post update(Post post, UUID id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
         logger.info(existingPost.getName() + post.getName());
         existingPost.setName(post.getName());
@@ -98,12 +99,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAllByCurrentAuthor(Long id) {
+    public List<Post> getAllByCurrentAuthor(UUID id) {
         return postRepository.findAllByBloggerId(id);
     }
 
     @Override
-    public List<Post> getAllByAuthor(Long id) {
+    public List<Post> getAllByAuthor(UUID id) {
         List<Post> posts = postRepository.findAllByBloggerId(id);
         posts.forEach(this::increaseViewCount);
         return posts;
@@ -120,12 +121,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean validateOwnership(Long userId, Long postId) {
+    public Boolean validateOwnership(UUID userId, UUID postId) {
         return postRepository.findById(postId).stream().anyMatch(post -> post.getBlogger().getId().equals(userId));
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    public Boolean deleteById(UUID id) {
         try {
             postRepository.deleteById(id);
             return true;
@@ -135,7 +136,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Optional<Post> getById(Long id) {
+    public Optional<Post> getById(UUID id) {
         return postRepository.findById(id);
     }
 }

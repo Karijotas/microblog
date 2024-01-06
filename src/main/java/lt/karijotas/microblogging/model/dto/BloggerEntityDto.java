@@ -2,18 +2,19 @@ package lt.karijotas.microblogging.model.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class BloggerEntityDto extends BloggerDto {
-    private Long id;
+    private UUID id;
 
     public BloggerEntityDto() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 }

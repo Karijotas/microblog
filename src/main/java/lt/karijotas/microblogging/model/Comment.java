@@ -12,12 +12,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @NotBlank
     @Size(min = 1, max = 500, message = "A comment shouldn't be longer than 500 characters or shorter than 1")
@@ -31,17 +32,17 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Long id, String content, Post post) {
+    public Comment(UUID id, String content, Post post) {
         this.id = id;
         this.content = content;
         this.post = post;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

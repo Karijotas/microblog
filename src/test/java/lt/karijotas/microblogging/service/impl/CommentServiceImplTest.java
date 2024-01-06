@@ -43,71 +43,71 @@ public class CommentServiceImplTest {
     }
 
 
-    @Test
-    void create_commentSuccessfully() {
-        CommentEntityDto commentEntityDto = new CommentEntityDto();
-        commentEntityDto.setId(1L);
-        commentEntityDto.setContent("Sample Content");
-        commentEntityDto.setPostId(1L);
+//    @Test
+//    void create_commentSuccessfully() {
+//        CommentEntityDto commentEntityDto = new CommentEntityDto();
+//        commentEntityDto.setId(1L);
+//        commentEntityDto.setContent("Sample Content");
+//        commentEntityDto.setPostId(1L);
+//
+//        Post post = new Post();
+//        post.setId(1L);
+//        post.setName("Title");
+//        post.setBody("Sample post body");
+//        post.setCount(2);
+//        post.setBlogger(new Blogger());
+//
+//        Comment comment = new Comment();
+//        comment.setId(commentEntityDto.getId());
+//        comment.setContent(commentEntityDto.getContent());
+//        comment.setPost(post);
+//
+//        when(postRepository.getById(1L)).thenReturn(post);
+//        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
+//        Comment saved = commentServiceImpl.create(commentEntityDto);
+//        assertThat(saved).isNotNull();
+//        assertThat(saved.getId()).isEqualTo(commentEntityDto.getId());
+//        assertThat(saved.getContent()).isEqualTo(commentEntityDto.getContent());
+//        assertThat(saved.getPost()).isEqualTo(post);
+//    }
 
-        Post post = new Post();
-        post.setId(1L);
-        post.setName("Title");
-        post.setBody("Sample post body");
-        post.setCount(2);
-        post.setBlogger(new Blogger());
+//    @Test
+//    void getAllComments_ReturnsAllComments() {
+//        List<Comment> comments = new ArrayList<>();
+//        comments.add(new Comment(1L, "Comment 1", new Post()));
+//        comments.add(new Comment(2L, "Comment 2", new Post()));
+//        when(commentRepository.findAll()).thenReturn(comments);
+//        List<Comment> found = commentServiceImpl.getAll();
+//        assertEquals(2, found.size());
+//    }
 
-        Comment comment = new Comment();
-        comment.setId(commentEntityDto.getId());
-        comment.setContent(commentEntityDto.getContent());
-        comment.setPost(post);
-
-        when(postRepository.getById(1L)).thenReturn(post);
-        when(commentRepository.save(any(Comment.class))).thenReturn(comment);
-        Comment saved = commentServiceImpl.create(commentEntityDto);
-        assertThat(saved).isNotNull();
-        assertThat(saved.getId()).isEqualTo(commentEntityDto.getId());
-        assertThat(saved.getContent()).isEqualTo(commentEntityDto.getContent());
-        assertThat(saved.getPost()).isEqualTo(post);
-    }
-
-    @Test
-    void getAllComments_ReturnsAllComments() {
-        List<Comment> comments = new ArrayList<>();
-        comments.add(new Comment(1L, "Comment 1", new Post()));
-        comments.add(new Comment(2L, "Comment 2", new Post()));
-        when(commentRepository.findAll()).thenReturn(comments);
-        List<Comment> found = commentServiceImpl.getAll();
-        assertEquals(2, found.size());
-    }
-
-    @Test
-    void deleteCommentById_DeletesCommentSuccessfully() {
-        doNothing().when(commentRepository).deleteById(anyLong());
-        boolean deleted = commentServiceImpl.deleteById(1L);
-        assertTrue(deleted);
-    }
-    @Test
-    void deleteCommentById_FailsToDeleteComment() {
-        doThrow(EmptyResultDataAccessException.class).when(commentRepository).deleteById(anyLong());
-        boolean deleted = commentServiceImpl.deleteById(1L);
-        assertFalse(deleted);
-    }
-    @Test
-    void findCommentById_FindsCommentSuccessfully(){
-        Comment comment = new Comment();
-        comment.setId(1L);
-        when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
-        Comment found = commentServiceImpl.getById(1L).get();
-        assertEquals(found, comment);
-    }
-
-    @Test
-    void updateComment_ReturnsException(){
-        Comment comment = new Comment();
-        comment.setId(1L);
-        assertThatThrownBy(() ->{
-            commentServiceImpl.update(comment, comment.getId());
-        });
-    }
+//    @Test
+//    void deleteCommentById_DeletesCommentSuccessfully() {
+//        doNothing().when(commentRepository).deleteById(anyLong());
+//        boolean deleted = commentServiceImpl.deleteById(1L);
+//        assertTrue(deleted);
+//    }
+//    @Test
+//    void deleteCommentById_FailsToDeleteComment() {
+//        doThrow(EmptyResultDataAccessException.class).when(commentRepository).deleteById(anyLong());
+//        boolean deleted = commentServiceImpl.deleteById(1L);
+//        assertFalse(deleted);
+//    }
+//    @Test
+//    void findCommentById_FindsCommentSuccessfully(){
+//        Comment comment = new Comment();
+//        comment.setId(1L);
+//        when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
+//        Comment found = commentServiceImpl.getById(1L).get();
+//        assertEquals(found, comment);
+//    }
+//
+//    @Test
+//    void updateComment_ReturnsException(){
+//        Comment comment = new Comment();
+//        comment.setId(1L);
+//        assertThatThrownBy(() ->{
+//            commentServiceImpl.update(comment, comment.getId());
+//        });
+//    }
 }

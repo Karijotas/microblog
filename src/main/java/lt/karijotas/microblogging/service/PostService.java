@@ -5,6 +5,7 @@ import lt.karijotas.microblogging.model.dto.PostEntityDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface PostService extends GenericService<Post, PostEntityDto> {
 
@@ -14,11 +15,11 @@ public interface PostService extends GenericService<Post, PostEntityDto> {
 
     Map<String, Long> mostUsedWords(Post post, Long limit);
 
-    List<Post> getAllByCurrentAuthor(Long id);
+    List<Post> getAllByCurrentAuthor(UUID id);
 
-    List<Post> getAllByAuthor(Long id);
+    List<Post> getAllByAuthor(UUID id);
 
     void increaseViewCount(Post post);
 
-    Boolean validateOwnership(Long userId, Long postId);
+    Boolean validateOwnership(UUID userId, UUID postId);
 }

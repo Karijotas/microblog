@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static lt.karijotas.microblogging.model.mapper.CommentMapper.toComment;
 
@@ -47,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment update(Comment entity, Long id) {
+    public Comment update(Comment entity, UUID id) {
         throw new BlogValidationExeption("Method not implemented");
     }
 
@@ -57,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    public Boolean deleteById(UUID id) {
         try {
             commentRepository.deleteById(id);
             return true;
@@ -67,12 +68,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Optional<Comment> getById(Long id) {
+    public Optional<Comment> getById(UUID id) {
         return commentRepository.findById(id);
     }
 
     @Override
-    public List<Comment> getAllByPostId(Long postId) {
+    public List<Comment> getAllByPostId(UUID postId) {
         return commentRepository.findAllByPostId(postId);
     }
 }

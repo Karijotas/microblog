@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 import static lt.karijotas.microblogging.model.mapper.BloggerMapper.toUserEntityDto;
 import static org.springframework.http.ResponseEntity.ok;
@@ -41,7 +42,7 @@ public class BloggerController {
     }
 
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<BloggerEntityDto> getUser(@PathVariable Long userId) {
+    public ResponseEntity<BloggerEntityDto> getUser(@PathVariable UUID userId) {
         var userOptional = bloggerService.getById(userId);
 
         return userOptional
@@ -68,7 +69,7 @@ public class BloggerController {
     public ResponseEntity<String> getCurrentUserId(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
-            Long id = bloggerService.findByUserName(username).getId();
+            UUID id = bloggerService.findByUserName(username).getId();
             return ResponseEntity.ok(id.toString());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No authenticated user found.");

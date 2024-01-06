@@ -2,19 +2,20 @@ package lt.karijotas.microblogging.model.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PostEntityDto extends PostDto {
-    private Long id;
+    private UUID id;
 
     public PostEntityDto() {
         super();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "blogger")
@@ -19,7 +20,7 @@ public class Blogger {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "blogger_id")
-    private Long id;
+    private UUID id;
     @NotBlank
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String userName;
@@ -30,17 +31,17 @@ public class Blogger {
     public Blogger() {
     }
 
-    public Blogger(Long id, String userName, String password) {
+    public Blogger(UUID id, String userName, String password) {
         this.id = id;
         this.userName = userName;
         this.password = password;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

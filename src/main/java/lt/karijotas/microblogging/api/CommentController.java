@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 import static lt.karijotas.microblogging.model.mapper.CommentMapper.toCommentEntityDto;
 import static org.springframework.http.ResponseEntity.ok;
@@ -40,12 +41,12 @@ public class CommentController {
 
     @GetMapping(value = "/post/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public List<Comment> getAllByPostId(@PathVariable Long postId) {
+    public List<Comment> getAllByPostId(@PathVariable UUID postId) {
         return commentService.getAllByPostId(postId);
     }
     @GetMapping(value = "/count/{postId}", produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public Integer getCommentCountByPostId(@PathVariable Long postId) {
+    public Integer getCommentCountByPostId(@PathVariable UUID postId) {
         return commentService.getAllByPostId(postId).size();
     }
 
@@ -56,7 +57,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
+    public ResponseEntity<Void> deleteComment(@PathVariable UUID commentId) {
         logger.info("Attempt to delete Comment by id: {}", commentId);
         boolean deleted = commentService.deleteById(commentId);
         return (deleted ? ResponseEntity.noContent() : ResponseEntity.notFound()).build();

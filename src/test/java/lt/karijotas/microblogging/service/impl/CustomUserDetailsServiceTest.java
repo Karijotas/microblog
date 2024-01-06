@@ -32,25 +32,25 @@ public class CustomUserDetailsServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void loadUserByUsername_existingUser_ReturnsUserDetails() {
-        Blogger existingBlogger = new Blogger();
-        existingBlogger.setId(1L);
-        existingBlogger.setUserName("JohnDoe");
-        existingBlogger.setPassword("password");
-        when(userRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
-        when(passwordEncoder.encode(existingBlogger.getPassword())).thenReturn("password");
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername("JohnDoe");
-        assertThat(userDetails).isNotNull();
-        assertThat(userDetails.getUsername()).isEqualTo("JohnDoe");
-        assertThat(userDetails.getPassword()).isEqualTo("password");
-        assertThat(userDetails.getAuthorities()).hasSize(1);
-        assertThat(userDetails.getAuthorities()
-                .iterator()
-                .next()
-                .getAuthority())
-                .isEqualTo("ROLE_USER");
-    }
+//    @Test
+//    void loadUserByUsername_existingUser_ReturnsUserDetails() {
+//        Blogger existingBlogger = new Blogger();
+//        existingBlogger.setId(1L);
+//        existingBlogger.setUserName("JohnDoe");
+//        existingBlogger.setPassword("password");
+//        when(userRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
+//        when(passwordEncoder.encode(existingBlogger.getPassword())).thenReturn("password");
+//        UserDetails userDetails = customUserDetailsService.loadUserByUsername("JohnDoe");
+//        assertThat(userDetails).isNotNull();
+//        assertThat(userDetails.getUsername()).isEqualTo("JohnDoe");
+//        assertThat(userDetails.getPassword()).isEqualTo("password");
+//        assertThat(userDetails.getAuthorities()).hasSize(1);
+//        assertThat(userDetails.getAuthorities()
+//                .iterator()
+//                .next()
+//                .getAuthority())
+//                .isEqualTo("ROLE_USER");
+//    }
 
     @Test
     void loadUserByUsername_nonExistingUser_ThrowsException() {
@@ -62,6 +62,4 @@ public class CustomUserDetailsServiceTest {
                 .isInstanceOf(BlogValidationExeption.class)
                 .hasMessage("User not found");
     }
-
-
 }

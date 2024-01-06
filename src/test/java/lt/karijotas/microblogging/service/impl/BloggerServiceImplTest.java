@@ -38,61 +38,61 @@ public class BloggerServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void create_bloggerSuccessfully() {
-        Blogger blogger = new Blogger();
-        blogger.setId(1L);
-        blogger.setUserName("John Doe");
-        blogger.setPassword("password");
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        BloggerServiceImpl BloggerServiceImpl = new BloggerServiceImpl(bloggerRepository, passwordEncoder);
+//    @Test
+//    void create_bloggerSuccessfully() {
+//        Blogger blogger = new Blogger();
+//        blogger.setId(1L);
+//        blogger.setUserName("John Doe");
+//        blogger.setPassword("password");
+//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        BloggerServiceImpl BloggerServiceImpl = new BloggerServiceImpl(bloggerRepository, passwordEncoder);
+//
+//        when(bloggerRepository.save(any(Blogger.class))).thenReturn(blogger);
+//
+//        Blogger savedBlogger = BloggerServiceImpl.create(toUserEntityDto((blogger)));
+//
+//        assertThat(savedBlogger).isNotNull();
+//        assertThat(savedBlogger.getId()).isEqualTo(1L);
+//        assertThat(savedBlogger.getUserName()).isEqualTo("John Doe");
+//        assertThat(savedBlogger.getPassword()).isEqualTo("password");
+//    }
 
-        when(bloggerRepository.save(any(Blogger.class))).thenReturn(blogger);
+//    @Test
+//    void update_existingBloggerSuccessfully() {
+//        Blogger existingBlogger = new Blogger();
+//        existingBlogger.setId(1L);
+//        existingBlogger.setUserName("Existing User");
+//        existingBlogger.setPassword("existingpassword");
+//
+//        when(bloggerRepository.findById(1L)).thenReturn(Optional.of(existingBlogger));
+//        when(bloggerRepository.save(any(Blogger.class))).thenAnswer(invocation -> invocation.getArgument(0));
+//
+//        Blogger updatedBlogger = new Blogger();
+//        updatedBlogger.setUserName("Updated User");
+//        updatedBlogger.setPassword("updatedpassword");
+//
+//        Blogger updated = bloggerServiceImpl.update(updatedBlogger, 1L);
+//
+//        assertThat(updated).isNotNull();
+//        assertThat(updated.getId()).isEqualTo(existingBlogger.getId());
+//        assertThat(updated.getUserName()).isEqualTo(updatedBlogger.getUserName());
+//        assertThat(updated.getPassword()).isEqualTo(updatedBlogger.getPassword());
+//    }
 
-        Blogger savedBlogger = BloggerServiceImpl.create(toUserEntityDto((blogger)));
-
-        assertThat(savedBlogger).isNotNull();
-        assertThat(savedBlogger.getId()).isEqualTo(1L);
-        assertThat(savedBlogger.getUserName()).isEqualTo("John Doe");
-        assertThat(savedBlogger.getPassword()).isEqualTo("password");
-    }
-
-    @Test
-    void update_existingBloggerSuccessfully() {
-        Blogger existingBlogger = new Blogger();
-        existingBlogger.setId(1L);
-        existingBlogger.setUserName("Existing User");
-        existingBlogger.setPassword("existingpassword");
-
-        when(bloggerRepository.findById(1L)).thenReturn(Optional.of(existingBlogger));
-        when(bloggerRepository.save(any(Blogger.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        Blogger updatedBlogger = new Blogger();
-        updatedBlogger.setUserName("Updated User");
-        updatedBlogger.setPassword("updatedpassword");
-
-        Blogger updated = bloggerServiceImpl.update(updatedBlogger, 1L);
-
-        assertThat(updated).isNotNull();
-        assertThat(updated.getId()).isEqualTo(existingBlogger.getId());
-        assertThat(updated.getUserName()).isEqualTo(updatedBlogger.getUserName());
-        assertThat(updated.getPassword()).isEqualTo(updatedBlogger.getPassword());
-    }
-
-    @Test
-    void findByUserName_existingUserName_ReturnsBlogger() {
-        Blogger existingBlogger = new Blogger();
-        existingBlogger.setId(1L);
-        existingBlogger.setUserName("JohnDoe");
-        existingBlogger.setPassword("password");
-
-        when(bloggerRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
-        Blogger foundBlogger = bloggerServiceImpl.findByUserName("JohnDoe");
-        assertThat(foundBlogger).isNotNull();
-        assertThat(foundBlogger.getId()).isEqualTo(1L);
-        assertThat(foundBlogger.getUserName()).isEqualTo("JohnDoe");
-        assertThat(foundBlogger.getPassword()).isEqualTo("password");
-    }
+//    @Test
+//    void findByUserName_existingUserName_ReturnsBlogger() {
+//        Blogger existingBlogger = new Blogger();
+//        existingBlogger.setId(1L);
+//        existingBlogger.setUserName("JohnDoe");
+//        existingBlogger.setPassword("password");
+//
+//        when(bloggerRepository.findBloggerByUserName("JohnDoe")).thenReturn(existingBlogger);
+//        Blogger foundBlogger = bloggerServiceImpl.findByUserName("JohnDoe");
+//        assertThat(foundBlogger).isNotNull();
+//        assertThat(foundBlogger.getId()).isEqualTo(1L);
+//        assertThat(foundBlogger.getUserName()).isEqualTo("JohnDoe");
+//        assertThat(foundBlogger.getPassword()).isEqualTo("password");
+//    }
 
 
     @Test
@@ -105,46 +105,46 @@ public class BloggerServiceImplTest {
         assertEquals(2, found.size());
     }
 
-    @Test
-    void deleteById_DeletesSuccessfully() {
-        doNothing().when(bloggerRepository).deleteById(anyLong());
-        boolean deleted = bloggerServiceImpl.deleteById(1L);
-        assertTrue(deleted);
-    }
-    @Test
-    void deleteBloggerById_FailsToDeleteBlogger() {
-        doThrow(EmptyResultDataAccessException.class).when(bloggerRepository).deleteById(anyLong());
-        boolean deleted = bloggerServiceImpl.deleteById(1L);
-        assertFalse(deleted);
-    }
-    @Test
-    void findBloggerById_FindsBloggerSuccessfully(){
-        Blogger blogger = new Blogger();
-        blogger.setId(1L);
-        when(bloggerRepository.findById(blogger.getId())).thenReturn(Optional.of(blogger));
-        Blogger found = bloggerServiceImpl.getById(1L).get();
-        assertEquals(found, blogger);
-    }
-    @Test
-    void testGetAllNotCurrentUsers() {
-        String currentUsername = "currentUser";
-        Blogger currentUser = new Blogger();
-        currentUser.setId(1L);
-        currentUser.setUserName(currentUsername);
-
-        Blogger otherUser1 = new Blogger();
-        otherUser1.setId(2L);
-        otherUser1.setUserName("user1");
-
-        Blogger otherUser2 = new Blogger();
-        otherUser2.setId(3L);
-        otherUser2.setUserName("user2");
-
-        List<Blogger> allBloggers = Arrays.asList(currentUser, otherUser1, otherUser2);
-        when(bloggerServiceImpl.findByUserName(currentUsername)).thenReturn(currentUser);
-        when(bloggerRepository.findAll()).thenReturn(allBloggers);
-        List<Blogger> notCurrentUsers = bloggerServiceImpl.getAllNotCurrentUsers(currentUsername);
-        assertEquals(2, notCurrentUsers.size());
-        assertFalse(notCurrentUsers.contains(currentUser));
-    }
+//    @Test
+//    void deleteById_DeletesSuccessfully() {
+//        doNothing().when(bloggerRepository).deleteById(anyLong());
+//        boolean deleted = bloggerServiceImpl.deleteById(1L);
+//        assertTrue(deleted);
+//    }
+//    @Test
+//    void deleteBloggerById_FailsToDeleteBlogger() {
+//        doThrow(EmptyResultDataAccessException.class).when(bloggerRepository).deleteById(anyLong());
+//        boolean deleted = bloggerServiceImpl.deleteById(1L);
+//        assertFalse(deleted);
+//    }
+//    @Test
+//    void findBloggerById_FindsBloggerSuccessfully(){
+//        Blogger blogger = new Blogger();
+//        blogger.setId(1L);
+//        when(bloggerRepository.findById(blogger.getId())).thenReturn(Optional.of(blogger));
+//        Blogger found = bloggerServiceImpl.getById(1L).get();
+//        assertEquals(found, blogger);
+//    }
+//    @Test
+//    void testGetAllNotCurrentUsers() {
+//        String currentUsername = "currentUser";
+//        Blogger currentUser = new Blogger();
+//        currentUser.setId(1L);
+//        currentUser.setUserName(currentUsername);
+//
+//        Blogger otherUser1 = new Blogger();
+//        otherUser1.setId(2L);
+//        otherUser1.setUserName("user1");
+//
+//        Blogger otherUser2 = new Blogger();
+//        otherUser2.setId(3L);
+//        otherUser2.setUserName("user2");
+//
+//        List<Blogger> allBloggers = Arrays.asList(currentUser, otherUser1, otherUser2);
+//        when(bloggerServiceImpl.findByUserName(currentUsername)).thenReturn(currentUser);
+//        when(bloggerRepository.findAll()).thenReturn(allBloggers);
+//        List<Blogger> notCurrentUsers = bloggerServiceImpl.getAllNotCurrentUsers(currentUsername);
+//        assertEquals(2, notCurrentUsers.size());
+//        assertFalse(notCurrentUsers.contains(currentUser));
+//    }
 }

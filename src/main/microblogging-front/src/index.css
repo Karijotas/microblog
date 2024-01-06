@@ -16,13 +16,6 @@ body {
   padding: 20px;
 }
 
-.card {
-  width: 50vw;
-  margin: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-}
 
 .card-header {
   background-color: #007bff;
@@ -60,18 +53,6 @@ body {
   cursor: not-allowed;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-li {
-  margin-bottom: 5px;
-}
-
 h1 {
   text-align: center;
   margin-top: 20px;
@@ -82,4 +63,18 @@ p {
   font-size: 16px;
   line-height: 1.6;
   color: #555;
+}
+.header{
+  width: 30vw;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+.post{
+  width: 35vw;
+  margin: 20px;
+  border-radius: 9px;
+  box-shadow: 0 5px 9px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
 }

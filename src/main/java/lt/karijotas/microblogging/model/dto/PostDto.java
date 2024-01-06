@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PostDto {
     private String name;
     private String body;
-    private Long bloggerId;
+    private UUID bloggerId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDate;
 
@@ -38,11 +39,11 @@ public class PostDto {
         this.body = body;
     }
 
-    public Long getBloggerId() {
+    public UUID getBloggerId() {
         return bloggerId;
     }
 
-    public void setBloggerId(Long bloggerId) {
+    public void setBloggerId(UUID bloggerId) {
         this.bloggerId = bloggerId;
     }
 

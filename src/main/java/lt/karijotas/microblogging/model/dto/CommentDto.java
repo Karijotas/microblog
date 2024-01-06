@@ -1,10 +1,11 @@
 package lt.karijotas.microblogging.model.dto;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class CommentDto {
     private String content;
-    private Long postId;
+    private UUID postId;
 
     public CommentDto() {
     }
@@ -17,11 +18,11 @@ public class CommentDto {
         this.content = content;
     }
 
-    public Long getPostId() {
+    public UUID getPostId() {
         return postId;
     }
 
-    public void setPostId(Long postId) {
+    public void setPostId(UUID postId) {
         this.postId = postId;
     }
 

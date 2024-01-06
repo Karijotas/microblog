@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class BloggerServiceImpl implements BloggerService {
@@ -35,7 +36,7 @@ public class BloggerServiceImpl implements BloggerService {
     }
 
     @Override
-    public Blogger update(Blogger blogger, Long id) {
+    public Blogger update(Blogger blogger, UUID id) {
         Blogger existingBlogger = bloggerRepository.findById(id)
                 .orElseThrow(() -> new BlogValidationExeption("User doesn't exist", "id", "User doesn't exist", id.toString()));
         existingBlogger.setUserName(blogger.getUserName());
@@ -54,12 +55,12 @@ public class BloggerServiceImpl implements BloggerService {
     }
 
     @Override
-    public Optional<Blogger> getById(Long id) {
+    public Optional<Blogger> getById(UUID id) {
         return bloggerRepository.findById(id);
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    public Boolean deleteById(UUID id) {
         try {
             bloggerRepository.deleteById(id);
             return true;
@@ -75,7 +76,7 @@ public class BloggerServiceImpl implements BloggerService {
 
     @Override
     public List<Blogger> getAllNotCurrentUsers(String username) {
-        Long id = findByUserName(username).getId();
+        UUID id = findByUserName(username).getId();
         return bloggerRepository.findAll()
                 .stream()
                 .filter(blogger -> !blogger.getId().equals(id))

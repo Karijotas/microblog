@@ -12,12 +12,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
     @NotBlank
     @Size(min = 1, max = 100, message = "A name shouldn't be longer than 100 characters or shorter than 1")
     private String name;
@@ -32,11 +33,11 @@ public class Post {
     public Post() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -85,4 +86,14 @@ public class Post {
         return Objects.hash(getId(), getName(), getBody(), getBlogger(), getCount());
     }
 
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", body='" + body + '\'' +
+                ", blogger=" + blogger +
+                ", count=" + count +
+                '}';
+    }
 }
