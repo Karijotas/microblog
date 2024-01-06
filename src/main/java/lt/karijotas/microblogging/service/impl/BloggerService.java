@@ -67,13 +67,6 @@ public class BloggerService {
             return false;
         }
     }
-
-    
-    public Boolean validateLength(Blogger entity) {
-       throw new BlogValidationExeption("Not implemented");
-    }
-
-    
     public List<Blogger> getAllNotCurrentUsers(String username) {
         UUID id = findByUserName(username).getId();
         return bloggerRepository.findAll()

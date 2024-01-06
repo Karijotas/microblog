@@ -46,12 +46,6 @@ public class CommentService {
         throw new BlogValidationExeption("Comment shouldn't be empty");
     }
 
-    
-    public Comment update(Comment entity, UUID id) {
-        throw new BlogValidationExeption("Method not implemented");
-    }
-
-    
     public List<Comment> getAll() {
         return commentRepository.findAll();
     }
@@ -66,12 +60,6 @@ public class CommentService {
         }
     }
 
-    
-    public Optional<Comment> getById(UUID id) {
-        return commentRepository.findById(id);
-    }
-
-    
     public List<Comment> getAllByPostId(UUID postId) {
         return commentRepository.findAllByPostId(postId);
     }

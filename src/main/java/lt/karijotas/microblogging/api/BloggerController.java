@@ -28,7 +28,6 @@ import static org.springframework.http.ResponseEntity.ok;
 @Controller
 @RequestMapping("/blogger")
 public class BloggerController {
-    private final Logger logger = LoggerFactory.getLogger(BloggerController.class);
     private final BloggerService bloggerService;
 
     public BloggerController(BloggerService bloggerService) {

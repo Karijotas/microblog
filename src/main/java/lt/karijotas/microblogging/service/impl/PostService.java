@@ -26,8 +26,6 @@ import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
 public class PostService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
-    private final Logger logger = LoggerFactory.getLogger(PostService.class);
-
     @Autowired
     public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
         this.bloggerRepository = bloggerRepository;
@@ -53,7 +51,6 @@ public class PostService {
 
     public Post update(Post post, UUID id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
-        logger.info(existingPost.getName() + post.getName());
         existingPost.setName(post.getName());
         existingPost.setBody(post.getBody());
         return postRepository.save(existingPost);
