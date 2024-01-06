@@ -6,7 +6,6 @@ import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
-import lt.karijotas.microblogging.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -18,23 +17,23 @@ import java.util.UUID;
 import static lt.karijotas.microblogging.model.mapper.CommentMapper.toComment;
 
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository,
-                              PostRepository postRepository) {
+    public CommentService(CommentRepository commentRepository,
+                          PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
     }
 
-    @Override
+    
     public Boolean validateLength(Comment comment) {
         return !comment.getContent().isEmpty();
     }
 
-    @Override
+    
     public Comment create(CommentEntityDto commentEntityDto) {
         Post post = postRepository.getById(commentEntityDto.getPostId());
         if (validateLength(toComment(commentEntityDto))) {
@@ -47,17 +46,17 @@ public class CommentServiceImpl implements CommentService {
         throw new BlogValidationExeption("Comment shouldn't be empty");
     }
 
-    @Override
+    
     public Comment update(Comment entity, UUID id) {
         throw new BlogValidationExeption("Method not implemented");
     }
 
-    @Override
+    
     public List<Comment> getAll() {
         return commentRepository.findAll();
     }
 
-    @Override
+    
     public Boolean deleteById(UUID id) {
         try {
             commentRepository.deleteById(id);
@@ -67,12 +66,12 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
-    @Override
+    
     public Optional<Comment> getById(UUID id) {
         return commentRepository.findById(id);
     }
 
-    @Override
+    
     public List<Comment> getAllByPostId(UUID postId) {
         return commentRepository.findAllByPostId(postId);
     }

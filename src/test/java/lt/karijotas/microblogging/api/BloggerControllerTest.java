@@ -3,7 +3,7 @@ package lt.karijotas.microblogging.api;
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.dto.BloggerEntityDto;
-import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
+import lt.karijotas.microblogging.service.impl.BloggerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,7 +17,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.when;
 class BloggerControllerTest {
 
     @Mock
-    private BloggerServiceImpl BloggerServiceImpl;
+    private BloggerService BloggerService;
 
     @Mock
     private BloggerRepository bloggerRepository;
@@ -37,15 +36,15 @@ class BloggerControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        bloggerController = new BloggerController(BloggerServiceImpl);
-        ReflectionTestUtils.setField(BloggerServiceImpl, "bloggerRepository", bloggerRepository);
+        bloggerController = new BloggerController(BloggerService);
+        ReflectionTestUtils.setField(BloggerService, "bloggerRepository", bloggerRepository);
     }
 
     @Test
     void getAll_ReturnsAllBloggers() {
         List<Blogger> mockBloggers = Collections.singletonList(new Blogger());
 
-        when(BloggerServiceImpl.getAll()).thenReturn(mockBloggers);
+        when(BloggerService.getAll()).thenReturn(mockBloggers);
 
         List<Blogger> bloggers = bloggerController.getAll();
 
@@ -58,7 +57,7 @@ class BloggerControllerTest {
 //        Blogger mockBlogger = new Blogger();
 //        mockBlogger.setId(userId);
 //
-//        when(BloggerServiceImpl.getById(userId)).thenReturn(Optional.of(mockBlogger));
+//        when(BloggerService.getById(userId)).thenReturn(Optional.of(mockBlogger));
 //        ResponseEntity<BloggerEntityDto> responseEntity = bloggerController.getUser(userId);
 //        assertEquals(200, responseEntity.getStatusCodeValue());
 //    }
@@ -67,7 +66,7 @@ class BloggerControllerTest {
 //    void getUser_BloggerDoesNotExist_ReturnsNotFound() {
 //        Long userId = 1L;
 //
-//        when(BloggerServiceImpl.getById(userId)).thenReturn(Optional.empty());
+//        when(BloggerService.getById(userId)).thenReturn(Optional.empty());
 //        ResponseEntity<BloggerEntityDto> responseEntity = bloggerController.getUser(userId);
 //        assertEquals(404, responseEntity.getStatusCodeValue());
 //    }
@@ -77,7 +76,7 @@ class BloggerControllerTest {
     void register_ValidBlogger_ReturnsCreatedBlogger() {
         Blogger blogger = new Blogger();
 
-        when(BloggerServiceImpl.create(any(BloggerEntityDto.class))).thenReturn(blogger);
+        when(BloggerService.create(any(BloggerEntityDto.class))).thenReturn(blogger);
 
         ResponseEntity<Blogger> responseEntity = bloggerController.register(blogger);
 
@@ -120,7 +119,7 @@ class BloggerControllerTest {
 //        nullUsernameBlogger.setId(1L);
 //        nullUsernameBlogger.setUserName(null);
 //
-//        when(BloggerServiceImpl.findByUserName(null)).thenReturn(nullUsernameBlogger);
+//        when(BloggerService.findByUserName(null)).thenReturn(nullUsernameBlogger);
 //        ResponseEntity<String> responseEntity = bloggerController.getCurrentUserId(null);
 //        assertEquals(404, responseEntity.getStatusCodeValue());
 //        assertEquals("No authenticated user found.", responseEntity.getBody());
@@ -134,19 +133,19 @@ class BloggerControllerTest {
 //        assertEquals(200, secondLoginResponse.getStatusCodeValue());
 //        assertEquals(secondUsername, secondLoginResponse.getBody());
 //
-//        when(BloggerServiceImpl.findByUserName("secondUser")).thenReturn(second);
+//        when(BloggerService.findByUserName("secondUser")).thenReturn(second);
 //        ResponseEntity<String> secondUserIdResponse = bloggerController.getCurrentUserId(secondUserDetails);
 //        assertEquals(200, secondUserIdResponse.getStatusCodeValue());
-//        assertEquals(BloggerServiceImpl.findByUserName(secondUsername).getId().toString(), secondUserIdResponse.getBody());
+//        assertEquals(BloggerService.findByUserName(secondUsername).getId().toString(), secondUserIdResponse.getBody());
 //
 //        ResponseEntity<String> logoutResponse = bloggerController.getCurrentUser(null);
 //        assertEquals(404, logoutResponse.getStatusCodeValue());
 //        assertEquals("No authenticated user found.", logoutResponse.getBody());
 //
-//        when(BloggerServiceImpl.findByUserName("firstUser")).thenReturn(first);
+//        when(BloggerService.findByUserName("firstUser")).thenReturn(first);
 //        ResponseEntity<String> firstUserIdResponse = bloggerController.getCurrentUserId(firstUserDetails);
 //        assertEquals(200, firstUserIdResponse.getStatusCodeValue());
-//        assertEquals(BloggerServiceImpl.findByUserName(firstUsername).getId().toString(), firstUserIdResponse.getBody());
+//        assertEquals(BloggerService.findByUserName(firstUsername).getId().toString(), firstUserIdResponse.getBody());
 //    }
 
     @Test

@@ -2,36 +2,27 @@ package lt.karijotas.microblogging.service.impl;
 
 import lt.karijotas.microblogging.dao.BloggerRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
-import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Post;
-import lt.karijotas.microblogging.model.dto.PostEntityDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PostServiceImplTest {
+public class PostServiceTest {
 
     @Mock
     private BloggerRepository bloggerRepository;
@@ -40,7 +31,7 @@ public class PostServiceImplTest {
     private PostRepository postRepository;
 
     @InjectMocks
-    private PostServiceImpl postServiceImpl;
+    private PostService postService;
 
     @BeforeEach
     void setup() {
@@ -98,7 +89,7 @@ public class PostServiceImplTest {
     void splitPost_validPost_ReturnsArrayOfWords() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words.");
-        String[] words = postServiceImpl.splitPostBody(post);
+        String[] words = postService.splitPostBody(post);
         assertThat(words).isNotNull();
         assertThat(words).containsExactly("this", "is", "a", "test", "post", "it", "has", "some", "words");
     }
@@ -107,7 +98,7 @@ public class PostServiceImplTest {
     void wordCount_validPost_ReturnsWordCount() {
         Post post = new Post();
         post.setBody("This is a test post. It has some words.");
-        int count = postServiceImpl.wordCount(post);
+        int count = postService.wordCount(post);
         assertThat(count).isEqualTo(9);
     }
 
@@ -128,7 +119,7 @@ public class PostServiceImplTest {
         posts.add(new Post());
         posts.add(new Post());
         when(postRepository.findAll()).thenReturn(posts);
-        List<Post> found = postServiceImpl.getAll();
+        List<Post> found = postService.getAll();
         assertEquals(2, found.size());
     }
 
@@ -164,7 +155,7 @@ public class PostServiceImplTest {
 //        posts.add(new Post());
 //        posts.add(new Post());
 //        when(postRepository.findAllByBloggerId(1L)).thenReturn(posts);
-//        PostServiceImpl postServiceImplSpy = spy(postServiceImpl);
+//        PostService postServiceImplSpy = spy(postServiceImpl);
 //        List<Post> retrievedPosts = postServiceImplSpy.getAllByAuthor(1L);
 //        verify(postServiceImplSpy, times(posts.size())).increaseViewCount(any(Post.class));
 //        assertEquals(posts, retrievedPosts);

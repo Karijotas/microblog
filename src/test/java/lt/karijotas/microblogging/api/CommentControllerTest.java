@@ -1,26 +1,22 @@
 package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Comment;
-import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
+import lt.karijotas.microblogging.service.impl.CommentService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CommentControllerTest {
     @Mock
-    private CommentServiceImpl commentServiceImpl;
+    private CommentService commentService;
 
     @InjectMocks
     private CommentController commentController;
@@ -32,7 +28,7 @@ public class CommentControllerTest {
     @Test
     void getAll_ReturnsAllComments() {
         List<Comment> mockComments = Collections.singletonList(new Comment());
-        when(commentServiceImpl.getAll()).thenReturn(mockComments);
+        when(commentService.getAll()).thenReturn(mockComments);
         List<Comment> comments = commentController.getAll();
         assertEquals(mockComments, comments);
     }

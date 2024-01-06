@@ -6,7 +6,6 @@ import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import lt.karijotas.microblogging.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +23,21 @@ import java.util.stream.Collectors;
 import static lt.karijotas.microblogging.model.mapper.PostMapper.toPost;
 
 @Service
-public class PostServiceImpl implements PostService {
+public class PostService {
     private final BloggerRepository bloggerRepository;
     private final PostRepository postRepository;
-    private final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(PostService.class);
 
     @Autowired
-    public PostServiceImpl(BloggerRepository bloggerRepository, PostRepository postRepository) {
+    public PostService(BloggerRepository bloggerRepository, PostRepository postRepository) {
         this.bloggerRepository = bloggerRepository;
         this.postRepository = postRepository;
     }
 
-    @Override
     public Boolean validateLength(Post post) {
         return !post.getBody().isEmpty() || !post.getName().isEmpty();
     }
 
-    @Override
     public Post create(PostEntityDto post) {
         Blogger blogger = bloggerRepository.getById(post.getBloggerId());
         if (validateLength(toPost(post))) {
@@ -54,7 +51,6 @@ public class PostServiceImpl implements PostService {
         throw new BlogValidationExeption("Post title and body shouldn't be empty");
     }
 
-    @Override
     public Post update(Post post, UUID id) {
         Post existingPost = postRepository.findById(id).orElseThrow(() -> new BlogValidationExeption("Post doesn't exist", "id", "Post doesn't exist", id.toString()));
         logger.info(existingPost.getName() + post.getName());
@@ -63,7 +59,6 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(existingPost);
     }
 
-    @Override
     public String[] splitPostBody(Post post) {
         String text = post.getBody();
         return text.replaceAll("[^\\p{L}\\p{Nd}]+", " ")
@@ -72,12 +67,10 @@ public class PostServiceImpl implements PostService {
                 .split("\\s+");
     }
 
-    @Override
     public Integer wordCount(Post post) {
         return splitPostBody(post).length;
     }
 
-    @Override
     public Map<String, Long> mostUsedWords(Post post, Long limit) {
         String[] words = splitPostBody(post);
         return Arrays.stream(words)
@@ -92,25 +85,21 @@ public class PostServiceImpl implements PostService {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
-    @Override
-    public List<Post> getAll() {
+      public List<Post> getAll() {
         return postRepository.findAll();
 
     }
 
-    @Override
     public List<Post> getAllByCurrentAuthor(UUID id) {
         return postRepository.findAllByBloggerId(id);
     }
 
-    @Override
     public List<Post> getAllByAuthor(UUID id) {
         List<Post> posts = postRepository.findAllByBloggerId(id);
         posts.forEach(this::increaseViewCount);
         return posts;
     }
 
-    @Override
     public void increaseViewCount(Post post) {
         if (post.getCount() == null) {
             post.setCount(1);
@@ -120,12 +109,10 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
-    @Override
     public Boolean validateOwnership(UUID userId, UUID postId) {
         return postRepository.findById(postId).stream().anyMatch(post -> post.getBlogger().getId().equals(userId));
     }
 
-    @Override
     public Boolean deleteById(UUID id) {
         try {
             postRepository.deleteById(id);
@@ -135,7 +122,6 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    @Override
     public Optional<Post> getById(UUID id) {
         return postRepository.findById(id);
     }

@@ -2,20 +2,10 @@ package lt.karijotas.microblogging.service.impl;
 
 import lt.karijotas.microblogging.dao.CommentRepository;
 import lt.karijotas.microblogging.dao.PostRepository;
-import lt.karijotas.microblogging.model.Blogger;
-import lt.karijotas.microblogging.model.Comment;
-import lt.karijotas.microblogging.model.Post;
-import lt.karijotas.microblogging.model.dto.CommentEntityDto;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.EmptyResultDataAccessException;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -23,19 +13,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
 
-public class CommentServiceImplTest {
+public class CommentServiceTest {
 
     @Mock
     private CommentRepository commentRepository;
     @Mock
     private PostRepository postRepository;
     @InjectMocks
-    private CommentServiceImpl commentServiceImpl;
+    private CommentService commentService;
 
     @BeforeEach
     void setup() {

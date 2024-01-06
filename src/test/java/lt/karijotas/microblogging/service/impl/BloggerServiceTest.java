@@ -7,32 +7,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static lt.karijotas.microblogging.model.mapper.BloggerMapper.toUserEntityDto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-public class BloggerServiceImplTest {
+public class BloggerServiceTest {
 
     @Mock
     private BloggerRepository bloggerRepository;
     @InjectMocks
-    private BloggerServiceImpl bloggerServiceImpl;
+    private BloggerService bloggerService;
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
@@ -45,11 +37,11 @@ public class BloggerServiceImplTest {
 //        blogger.setUserName("John Doe");
 //        blogger.setPassword("password");
 //        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        BloggerServiceImpl BloggerServiceImpl = new BloggerServiceImpl(bloggerRepository, passwordEncoder);
+//        BloggerService BloggerService = new BloggerService(bloggerRepository, passwordEncoder);
 //
 //        when(bloggerRepository.save(any(Blogger.class))).thenReturn(blogger);
 //
-//        Blogger savedBlogger = BloggerServiceImpl.create(toUserEntityDto((blogger)));
+//        Blogger savedBlogger = BloggerService.create(toUserEntityDto((blogger)));
 //
 //        assertThat(savedBlogger).isNotNull();
 //        assertThat(savedBlogger.getId()).isEqualTo(1L);
@@ -101,7 +93,7 @@ public class BloggerServiceImplTest {
         bloggers.add(new Blogger());
         bloggers.add(new Blogger());
         when(bloggerRepository.findAll()).thenReturn(bloggers);
-        List<Blogger> found = bloggerServiceImpl.getAll();
+        List<Blogger> found = bloggerService.getAll();
         assertEquals(2, found.size());
     }
 

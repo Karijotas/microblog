@@ -2,7 +2,7 @@ package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.dto.CommentEntityDto;
-import lt.karijotas.microblogging.service.CommentService;
+import lt.karijotas.microblogging.service.impl.CommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

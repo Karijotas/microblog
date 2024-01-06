@@ -2,7 +2,7 @@ package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.model.Blogger;
 import lt.karijotas.microblogging.model.dto.BloggerEntityDto;
-import lt.karijotas.microblogging.service.BloggerService;
+import lt.karijotas.microblogging.service.impl.BloggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

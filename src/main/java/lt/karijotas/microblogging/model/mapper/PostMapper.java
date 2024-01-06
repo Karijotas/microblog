@@ -1,21 +1,20 @@
 package lt.karijotas.microblogging.model.mapper;
 
-import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
+import lt.karijotas.microblogging.service.impl.BloggerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PostMapper {
 
-    private final BloggerServiceImpl BloggerServiceImpl;
+    private final BloggerService BloggerService;
     private static final Logger logger = LoggerFactory.getLogger(PostMapper.class);
 
 
-    public PostMapper(BloggerServiceImpl BloggerServiceImpl) {
-        this.BloggerServiceImpl = BloggerServiceImpl;
+    public PostMapper(BloggerService BloggerService) {
+        this.BloggerService = BloggerService;
     }
 
     public static PostEntityDto toPostEntityDto(Post post) {

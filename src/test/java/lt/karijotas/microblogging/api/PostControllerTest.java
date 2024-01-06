@@ -1,45 +1,32 @@
 package lt.karijotas.microblogging.api;
 
 import lt.karijotas.microblogging.dao.CommentRepository;
-import lt.karijotas.microblogging.exception.BlogValidationExeption;
 import lt.karijotas.microblogging.model.Blogger;
-import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
-import lt.karijotas.microblogging.model.dto.PostDto;
-import lt.karijotas.microblogging.service.impl.BloggerServiceImpl;
-import lt.karijotas.microblogging.service.impl.CommentServiceImpl;
-import lt.karijotas.microblogging.service.impl.PostServiceImpl;
+import lt.karijotas.microblogging.service.impl.BloggerService;
+import lt.karijotas.microblogging.service.impl.CommentService;
+import lt.karijotas.microblogging.service.impl.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-import static lt.karijotas.microblogging.model.mapper.PostMapper.toPostEntityDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class PostControllerTest {
 
     @Mock
-    private PostServiceImpl postServiceImpl;
+    private PostService postService;
     @Mock
-    private BloggerServiceImpl BloggerServiceImpl;
+    private BloggerService BloggerService;
     @Mock
-    private CommentServiceImpl commentServiceImpl;
+    private CommentService commentService;
     @Mock
     private Blogger blogger;
     @Mock
@@ -108,7 +95,7 @@ class PostControllerTest {
     void getAll_ReturnsAllPosts() {
         List<Post> mockPosts = Collections.singletonList(new Post());
 
-        when(postServiceImpl.getAll()).thenReturn(mockPosts);
+        when(postService.getAll()).thenReturn(mockPosts);
 
         List<Post> posts = postController.getAll();
 
@@ -147,7 +134,7 @@ class PostControllerTest {
 //        UserDetails userDetails = mock(UserDetails.class);
 //        when(userDetails.getUsername()).thenReturn("username");
 //        Blogger blogger = mock(Blogger.class);
-//        when(BloggerServiceImpl.findByUserName(anyString())).thenReturn(blogger);
+//        when(BloggerService.findByUserName(anyString())).thenReturn(blogger);
 //        when(postServiceImpl.validateOwnership(anyLong(), anyLong())).thenReturn(true);
 //        when(postServiceImpl.deleteById(postId)).thenReturn(true);
 //        Comment comment = mock(Comment.class);
@@ -157,7 +144,7 @@ class PostControllerTest {
 //        ResponseEntity<Void> responseEntity = postController.deletePost(postId, userDetails);
 //        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
 //        verify(postServiceImpl).deleteById(postId);
-//        verify(BloggerServiceImpl).findByUserName("username");
+//        verify(BloggerService).findByUserName("username");
 //    }
 
 
@@ -172,7 +159,7 @@ class PostControllerTest {
 //        when(postServiceImpl.update(any(Post.class), eq(postId))).thenReturn(updatedPost);
 //        Blogger mockedBlogger = mock(Blogger.class);
 //        when(mockedBlogger.getId()).thenReturn(1L);
-//        when(BloggerServiceImpl.findByUserName(anyString())).thenReturn(mockedBlogger);
+//        when(BloggerService.findByUserName(anyString())).thenReturn(mockedBlogger);
 //        when(postServiceImpl.validateOwnership(anyLong(), anyLong())).thenReturn(true);
 //        when(postServiceImpl.update(any(Post.class), anyLong())).thenReturn(updatedPost);
 //
@@ -186,7 +173,7 @@ class PostControllerTest {
 //        when(userDetails.getUsername()).thenReturn("testUser");
 //        Blogger blogger = new Blogger();
 //        blogger.setId(1L);
-//        when(BloggerServiceImpl.findByUserName("testUser")).thenReturn(blogger);
+//        when(BloggerService.findByUserName("testUser")).thenReturn(blogger);
 //
 //        List<Post> mockPosts = Arrays.asList(new Post(), new Post());
 //        when(postServiceImpl.getAllByCurrentAuthor(anyLong())).thenReturn(mockPosts);

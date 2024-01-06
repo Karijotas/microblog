@@ -6,9 +6,9 @@ import lt.karijotas.microblogging.model.Comment;
 import lt.karijotas.microblogging.model.Post;
 import lt.karijotas.microblogging.model.dto.PostDto;
 import lt.karijotas.microblogging.model.dto.PostEntityDto;
-import lt.karijotas.microblogging.service.BloggerService;
-import lt.karijotas.microblogging.service.CommentService;
-import lt.karijotas.microblogging.service.PostService;
+import lt.karijotas.microblogging.service.impl.BloggerService;
+import lt.karijotas.microblogging.service.impl.CommentService;
+import lt.karijotas.microblogging.service.impl.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -38,14 +38,14 @@ import static org.springframework.http.ResponseEntity.ok;
 public class PostController {
     private final Logger logger = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
-    private final BloggerService BloggerService;
+    private final BloggerService bloggerService;
     private final CommentService commentService;
     private final CommentRepository commentRepository;
 
     public PostController(PostService postService, BloggerService bloggerService, CommentService commentService,
                           CommentRepository commentRepository) {
         this.postService = postService;
-        this.BloggerService = bloggerService;
+        this.bloggerService = bloggerService;
         this.commentService = commentService;
         this.commentRepository = commentRepository;
     }
@@ -60,10 +60,10 @@ public class PostController {
     public ResponseEntity<List<Post>> getAllByCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             String username = userDetails.getUsername();
-            UUID id = BloggerService.findByUserName(username).getId();
+            UUID id = bloggerService.findByUserName(username).getId();
             return ResponseEntity.ok(postService.getAllByCurrentAuthor(id));
         }
-        return null;
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping(value = "/user/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -89,7 +89,7 @@ public class PostController {
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable UUID postId, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            UUID id = BloggerService.findByUserName(userDetails.getUsername()).getId();
+            UUID id = bloggerService.findByUserName(userDetails.getUsername()).getId();
             if (postService.validateOwnership(id, postId)) {
                 logger.info("Attempt to delete Post by id: {}", postId);
                 List<Comment> comments = commentService.getAllByPostId(postId);
@@ -106,7 +106,7 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<PostDto> updatePost(@PathVariable UUID postId, @Valid @RequestBody PostDto postDto, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            UUID id = BloggerService.findByUserName(userDetails.getUsername()).getId();
+            UUID id = bloggerService.findByUserName(userDetails.getUsername()).getId();
             if (postService.validateOwnership(id, postId)) {
                 var updated = postService.update(toPost(postDto), postId);
                 return ok(toPostDto(updated));
